@@ -52,3 +52,12 @@ describe('limites pelo OpenStreetMap (alternativa ao IBGE)', () => {
     expect(() => buildLimitesFromOsm({ elements: [] }, { features: [] })).toThrow(/não encontrado/);
   });
 });
+
+describe('nomes de distrito', () => {
+  it('padroniza grafias alternativas (ex.: OpenStreetMap)', async () => {
+    const { canonicalDistrict } = await import('./pipeline');
+    expect(canonicalDistrict('Campos Elyseos')).toBe('Campos Elíseos');
+    expect(canonicalDistrict('XEREM')).toBe('Xerém');
+    expect(canonicalDistrict('Duque de Caxias')).toBe('Duque de Caxias');
+  });
+});

@@ -4,9 +4,19 @@ import { normalize } from './text.ts';
 
 export const MUNICIPIO_IBGE = '3301702';
 
+/** Nomes oficiais dos distritos de Duque de Caxias e grafias alternativas encontradas nas fontes. */
+export const DISTRITOS_OFICIAIS = ['Duque de Caxias', 'Campos Elíseos', 'Imbariê', 'Xerém'];
+const ALIASES: Record<string, string> = { 'campos elyseos': 'Campos Elíseos', 'campos elisios': 'Campos Elíseos', imbarie: 'Imbariê', xerem: 'Xerém' };
+
+/** Padroniza o nome do distrito (ex.: "Campos Elyseos" no OpenStreetMap → "Campos Elíseos"). */
+export function canonicalDistrict(nome: string): string {
+  const n = normalize(nome);
+  return DISTRITOS_OFICIAIS.find((d) => normalize(d) === n) ?? ALIASES[n] ?? nome;
+}
+
 export type LimitFeature = {
   type: 'Feature';
-  properties: { tipo: 'municipio' | 'distrito'; codigo: string; nome: string; fonte?: 'IBGE' | 'OpenStreetMap' };
+  properties: { tipo: 'municipio' | 'distrito'; codigo: string; nome: string; nome_original?: string; fonte?: 'IBGE' | 'OpenStreetMap' };
   geometry: AreaGeometry;
 };
 export type Limites = { type: 'FeatureCollection'; features: LimitFeature[] };
@@ -29,7 +39,7 @@ export function buildLimites(municipio: { features: IbgeFeature[] }, distritos: 
     const codigo = String(f.properties.codarea);
     const nome = nomePorCodigo.get(codigo);
     if (!nome) throw new Error(`Distrito ${codigo} sem nome na API de localidades.`);
-    features.push({ type: 'Feature', properties: { tipo: 'distrito', codigo, nome, fonte: 'IBGE' }, geometry: roundGeometry(f.geometry) });
+    features.push({ type: 'Feature', properties: { tipo: 'distrito', codigo, nome: canonicalDistrict(nome), nome_original: nome, fonte: 'IBGE' }, geometry: roundGeometry(f.geometry) });
   }
   return { type: 'FeatureCollection', features };
 }
@@ -57,7 +67,7 @@ export function buildLimitesFromOsm(rels: { elements: (OsmRel | { type: string }
     if (!['9', '10'].includes(r.tags.admin_level ?? '')) continue;
     features.push({
       type: 'Feature',
-      properties: { tipo: 'distrito', codigo: r.tags['IBGE:GEOCODIGO'] ?? `osm-${r.id}`, nome: r.tags.name, fonte: 'OpenStreetMap' },
+      properties: { tipo: 'distrito', codigo: r.tags['IBGE:GEOCODIGO'] ?? `osm-${r.id}`, nome: canonicalDistrict(r.tags.name), nome_original: r.tags.name, fonte: 'OpenStreetMap' },
       geometry: roundGeometry(geomById.get(r.id)!),
     });
   }
