@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ReportSummary } from '../components/ReportDetail';
-import { Card, EmptyState, PageHeader, StatusPill } from '../components/ui';
+import { Card, EmptyState, ExampleTag, PageHeader, StatusPill } from '../components/ui';
 import { dataSource, isDemo } from '../data';
 import { DemoSource } from '../data/demo';
 import type { ModerationAction } from '../data/source';
@@ -39,6 +39,7 @@ function DemoModeration() {
                 <div>
                   <p className="font-semibold text-navy">
                     {r.street} <span className="text-xs text-muted">({r.id})</span>
+                    <ExampleTag show={r.example} />
                   </p>
                   <p className="text-sm text-muted">
                     {r.neighborhood} · {r.district} · enviado {formatBrasilia(r.submittedAt)}

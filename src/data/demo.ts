@@ -34,6 +34,7 @@ function seed(base: number): PublicReport[] {
     verification: 'published_unconfirmed',
     history: [{ at: minutesAgo(Math.max(0, ago - 2), base), condition, trend, note: 'Relato enviado (demonstração)' }],
     photoCount: 0,
+    example: true,
     ...extra,
   });
   return [
@@ -62,11 +63,12 @@ function seed(base: number): PublicReport[] {
 }
 
 function seedHistorical(): HistoricalReport[] {
-  return [
+  const items: Omit<HistoricalReport, 'example'>[] = [
     { id: 'h1', district: 'Duque de Caxias', neighborhood: 'Bairro Demonstração 1', street: 'Rua Demonstração H1', location: { lng: -43.318, lat: -22.781 }, periodLabel: 'Verão de 2024 (exemplo)', perceivedFrequency: 'almost_every_heavy_rain', description: 'Exemplo fictício de memória comunitária.' },
     { id: 'h2', district: 'Campos Elíseos', neighborhood: 'Bairro Demonstração 3', street: 'Rua Demonstração H2', location: { lng: -43.262, lat: -22.702 }, periodLabel: 'Março de 2023 (exemplo)', perceivedFrequency: 'frequently' },
     { id: 'h3', district: 'Xerém', neighborhood: 'Bairro Demonstração 5', street: 'Rua Demonstração H3', location: { lng: -43.296, lat: -22.58 }, periodLabel: 'Janeiro de 2022 (exemplo)', perceivedFrequency: 'once' },
   ];
+  return items.map((h) => ({ ...h, example: true }));
 }
 
 export class DemoSource implements DataSource {
@@ -118,6 +120,7 @@ export class DemoSource implements DataSource {
       verification: 'published_unconfirmed',
       history: [{ at: now, condition: d.condition, trend: d.trend, note: 'Relato enviado (demonstração)' }],
       photoCount: 0,
+      example: true,
     });
     this.emit();
     return { id, status: 'published' };

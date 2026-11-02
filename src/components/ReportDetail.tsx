@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { DEPTH_LABELS, HAZARD_LABELS, VERIFICATION_LABELS } from '../domain/labels';
 import { formatBrasilia, freshnessOf, relativeTime } from '../domain/time';
 import type { PublicReport } from '../domain/types';
-import { ConditionBadge, FreshnessTag, TrendBadge } from './ui';
+import { ConditionBadge, ExampleTag, FreshnessTag, TrendBadge } from './ui';
 
 export function ReportSummary({ r, now = new Date() }: { r: PublicReport; now?: Date }) {
   const fr = freshnessOf(r.observedAt, now);
@@ -62,6 +62,7 @@ export default function ReportDetail({ report, onClose }: { report: PublicReport
           <h2 id="report-title" className="text-lg font-bold text-navy">
             {report.street}
             {report.nearNumber ? `, perto do nº ${report.nearNumber}` : ''}
+            <ExampleTag show={report.example} />
           </h2>
           <p className="text-sm text-muted">
             {report.neighborhood} · Distrito de {report.district}

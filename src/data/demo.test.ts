@@ -41,3 +41,16 @@ describe('NoBackendSource', () => {
     await expect(src.submitReport()).rejects.toThrow(/Fase 3/);
   });
 });
+
+describe('selo EXEMPLO (A2)', () => {
+  it('marca todos os dados de demonstração como exemplo, inclusive os enviados', async () => {
+    const src = new DemoSource();
+    expect((await src.listReports()).every((r) => r.example === true)).toBe(true);
+    expect((await src.listHistorical()).every((h) => h.example === true)).toBe(true);
+    await src.submitReport(
+      { district: 'Xerém', neighborhood: 'B', street: 'R', nearNumber: '', postalCode: '', referencePoint: '', segmentDescription: '', location: { lng: -43.3, lat: -22.6 }, condition: 'no_flooding', trend: 'unknown', hazards: [], description: '', observedDate: '', observedTime: '' },
+      new Date().toISOString(),
+    );
+    expect((await src.listReports())[0].example).toBe(true);
+  });
+});

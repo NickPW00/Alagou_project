@@ -106,3 +106,13 @@ export function StatusPill({ status }: { status: 'planejado' | 'em desenvolvimen
     <span className="rounded-full bg-navy/10 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-navy">{status}</span>
   );
 }
+
+/** Selo para dados fictícios de demonstração. */
+export function ExampleTag({ show = true }: { show?: boolean }) {
+  if (!show) return null;
+  return (
+    <span className="ml-1.5 inline-block rounded border border-ink/20 bg-attention px-1.5 py-px align-middle text-[11px] font-black tracking-wide text-ink">
+      EXEMPLO<span className="sr-only"> — dado fictício de demonstração</span>
+    </span>
+  );
+}

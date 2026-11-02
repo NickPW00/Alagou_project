@@ -21,4 +21,19 @@ Alternativa considerada: mudar a cor dos pontos fictícios. Descartada, porque a
 4. Sem violações de acessibilidade sérias ou críticas; a matriz do A1 continua passando.
 
 ## 3. Como foi
-*(preenchido ao concluir o item)*
+
+**Status:** implementado e testado (versão 0.4.0).
+
+### 3.1 Entregue
+- Campo `example` nos tipos de relato e de memória; a fonte de demonstração marca todos os registros, inclusive os enviados pelo formulário.
+- Selo "EXEMPLO" no mapa, sob pontos, agrupamentos e pontos históricos ([print](../img/a2-selo-exemplo-mapa.png)), desenhado em canvas e com alternativa para navegadores sem `roundRect` (iOS < 16).
+- Componente `ExampleTag` no detalhe do relato, nas listas do mapa (inclusive na lista lateral de telas largas), no Início, no Mapa da Memória, no painel administrativo e no detalhe histórico. Para leitores de tela, o selo é lido como "EXEMPLO — dado fictício de demonstração".
+
+### 3.2 Desvios
+Nenhum.
+
+### 3.3 Resultados
+- Teste unitário novo: todos os registros de demonstração têm `example: true` (21/21 unitários).
+- Teste de ponta a ponta novo (`e2e/example-tag.spec.ts`): conta os selos em cada tela (3 no Início, 8 na lista do mapa, 3 na Memória, 8 no painel administrativo), no celular e no desktop.
+- Suíte completa: **67 passaram**, 31 ignorados (por desenho), **0 falhas**; matriz de responsividade do A1 mantida.
+- Revisão visual: o selo não cobre a cor da situação nem a seta de tendência.

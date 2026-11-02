@@ -79,6 +79,8 @@ export type PublicReport = {
   verification: VerificationStatus;
   history: ReportHistoryEntry[];
   photoCount: number;
+  /** Dado fictício de demonstração (selo "EXEMPLO"). */
+  example?: boolean;
 };
 
 export type HistoricalReport = {
@@ -90,6 +92,8 @@ export type HistoricalReport = {
   periodLabel: string;
   perceivedFrequency: PerceivedFrequency;
   description?: string;
+  /** Dado fictício de demonstração (selo "EXEMPLO"). */
+  example?: boolean;
 };
 
 export type ReportDraft = {

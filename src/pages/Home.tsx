@@ -1,7 +1,7 @@
 import { Map, Megaphone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ReportSummary } from '../components/ReportDetail';
-import { Card, EmptyState, SafetyBox } from '../components/ui';
+import { Card, EmptyState, ExampleTag, SafetyBox } from '../components/ui';
 import { isDemo, useHistorical, useReports } from '../data';
 import { freshnessOf, relativeTime } from '../domain/time';
 import { HISTORICAL_AFTER_HOURS } from '../config/settings';
@@ -67,7 +67,10 @@ export default function Home() {
             {latest.map((r) => (
               <li key={r.id}>
                 <Card>
-                  <p className="font-semibold text-navy">{r.street}</p>
+                  <p className="font-semibold text-navy">
+                    {r.street}
+                    <ExampleTag show={r.example} />
+                  </p>
                   <p className="mb-2 text-sm text-muted">
                     {r.neighborhood} · {r.district} · {relativeTime(r.observedAt)}
                   </p>

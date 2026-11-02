@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Legend from '../components/Legend';
 import MapView from '../components/MapView';
 import ReportDetail, { ReportSummary } from '../components/ReportDetail';
-import { EmptyState } from '../components/ui';
+import { EmptyState, ExampleTag } from '../components/ui';
 import { useHistorical, useReports } from '../data';
 import { filterReports, type ReportFilter } from '../domain/filters';
 import { FREQUENCY_LABELS } from '../domain/labels';
@@ -37,7 +37,10 @@ function ReportList({ reports, onSelect }: { reports: PublicReport[]; onSelect: 
         {reports.map((r) => (
           <li key={r.id}>
             <button type="button" onClick={() => onSelect(r.id)} className="w-full rounded-2xl bg-white p-3 text-left shadow-sm ring-1 ring-black/5">
-              <p className="font-semibold text-navy">{r.street}</p>
+              <p className="font-semibold text-navy">
+                {r.street}
+                <ExampleTag show={r.example} />
+              </p>
               <p className="mb-1 text-sm text-muted">
                 {r.neighborhood} · {r.district} · {formatBrasilia(r.observedAt)}
               </p>
@@ -204,7 +207,10 @@ export default function LiveMap() {
               className="absolute inset-x-0 bottom-0 z-40 max-h-[75%] overflow-y-auto rounded-t-3xl bg-white p-4 shadow-2xl md:bottom-auto md:left-4 md:right-auto md:top-4 md:max-h-[calc(100%-2rem)] md:w-96 md:rounded-3xl"
             >
               <p className="text-xs font-bold uppercase text-[#6A1B9A]">Aqui já alagou! (histórico)</p>
-              <h2 className="text-lg font-bold text-navy">{hist.street}</h2>
+              <h2 className="text-lg font-bold text-navy">
+                {hist.street}
+                <ExampleTag show={hist.example} />
+              </h2>
               <p className="text-sm text-muted">
                 {hist.neighborhood} · {hist.district}
               </p>

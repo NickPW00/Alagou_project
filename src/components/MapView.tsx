@@ -46,6 +46,7 @@ function reportsToGeoJSON(reports: PublicReport[], now: Date): GeoJSON.FeatureCo
           color: fr === 'outdated' ? OUTDATED_COLOR : CONDITION_INFO[r.condition].color,
           opacity: fr === 'recent' ? 1 : fr === 'stale' ? 0.75 : 0.55,
           sev: fr === 'outdated' ? 0 : SEVERITY[r.condition],
+          ex: r.example ? 1 : 0,
         },
       };
     }),
@@ -58,7 +59,7 @@ function historicalToGeoJSON(items: HistoricalReport[]): GeoJSON.FeatureCollecti
     features: items.map((h) => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [h.location.lng, h.location.lat] },
-      properties: { id: h.id },
+      properties: { id: h.id, ex: h.example ? 1 : 0 },
     })),
   };
 }
@@ -107,6 +108,33 @@ function trendImage(trend: WaterTrend): ImageData {
     g.restore();
   }
   return g.getImageData(0, 0, s, s);
+}
+
+/** Retângulo arredondado com alternativa para navegadores sem `roundRect` (ex.: iOS < 16). */
+function roundedRect(g: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  g.beginPath();
+  if (typeof g.roundRect === 'function') g.roundRect(x, y, w, h, r);
+  else g.rect(x, y, w, h);
+  g.fill();
+}
+
+/** Selo "EXEMPLO" para dados fictícios, desenhado em canvas (pixelRatio 2). */
+function exampleImage(): ImageData {
+  const w = 132, h = 40;
+  const c = document.createElement('canvas');
+  c.width = w;
+  c.height = h;
+  const g = c.getContext('2d')!;
+  g.fillStyle = '#FFFFFF';
+  roundedRect(g, 0, 0, w, h, 10);
+  g.fillStyle = '#F2C200';
+  roundedRect(g, 3, 3, w - 6, h - 6, 8);
+  g.fillStyle = '#1A1A1A';
+  g.font = 'bold 22px Arial, Helvetica, sans-serif';
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.fillText('EXEMPLO', w / 2, h / 2 + 1);
+  return g.getImageData(0, 0, w, h);
 }
 
 export default function MapView({
@@ -177,6 +205,7 @@ export default function MapView({
         map.addImage(`trend-${t}`, trendImage(t), { pixelRatio: 2 }),
       );
       const hasGlyphs = Boolean(map.getStyle().glyphs);
+      map.addImage('example-tag', exampleImage(), { pixelRatio: 2 });
 
       map.addSource('historical', { type: 'geojson', data: historicalToGeoJSON([]) });
       map.addLayer({
@@ -193,13 +222,21 @@ export default function MapView({
         },
       });
 
+      map.addLayer({
+        id: 'historical-example',
+        type: 'symbol',
+        source: 'historical',
+        filter: ['==', ['get', 'ex'], 1],
+        layout: { visibility: 'none', 'icon-image': 'example-tag', 'icon-offset': [0, 21], 'icon-allow-overlap': true },
+      });
+
       map.addSource('reports', {
         type: 'geojson',
         data: reportsToGeoJSON([], new Date()),
         cluster: true,
         clusterRadius: 40,
         clusterMaxZoom: 14,
-        clusterProperties: { maxSev: ['max', ['get', 'sev']] },
+        clusterProperties: { maxSev: ['max', ['get', 'sev']], ex: ['max', ['get', 'ex']] },
       });
       const sevColor: maplibregl.ExpressionSpecification = [
         'match',
@@ -258,6 +295,19 @@ export default function MapView({
         },
       });
 
+      map.addLayer({
+        id: 'report-example',
+        type: 'symbol',
+        source: 'reports',
+        filter: ['==', ['get', 'ex'], 1],
+        layout: {
+          'icon-image': 'example-tag',
+          // Abaixo do ponto (ou do agrupamento, que é maior).
+          'icon-offset': ['case', ['has', 'point_count'], ['literal', [0, 32]], ['literal', [0, 23]]],
+          'icon-allow-overlap': true,
+        },
+      });
+
       map.on('click', 'report-points', (e) => {
         const id = e.features?.[0]?.properties?.id;
         if (id) cb.current.onSelectReport?.(String(id));
@@ -310,6 +360,7 @@ export default function MapView({
     if (!ready || !map) return;
     (map.getSource('historical') as GeoJSONSource).setData(historicalToGeoJSON(historical));
     map.setLayoutProperty('historical-points', 'visibility', showHistorical ? 'visible' : 'none');
+    map.setLayoutProperty('historical-example', 'visibility', showHistorical ? 'visible' : 'none');
   }, [ready, historical, showHistorical]);
 
   // Marcador arrastável para escolher o ponto no formulário.

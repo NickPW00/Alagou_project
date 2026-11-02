@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Card, EmptyState, PageHeader, StatusPill } from '../components/ui';
+import { Card, EmptyState, ExampleTag, PageHeader, StatusPill } from '../components/ui';
 import { useHistorical, useReports } from '../data';
 import { FREQUENCY_LABELS } from '../domain/labels';
 
@@ -31,7 +31,10 @@ export default function Memory() {
           {historical.map((h) => (
             <li key={h.id}>
               <Card>
-                <p className="font-semibold text-navy">{h.street}</p>
+                <p className="font-semibold text-navy">
+                  {h.street}
+                  <ExampleTag show={h.example} />
+                </p>
                 <p className="text-sm text-muted">
                   {h.neighborhood} · {h.district}
                 </p>

@@ -4,6 +4,10 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Versões: [SemVe
 
 ## [Não lançado]
 
+## [0.4.0] — 2026-11-02
+### Adicionado
+- A2: selo "EXEMPLO" em todo dado fictício — mapa (pontos, agrupamentos, histórico), listas, detalhes, Início, Memória e painel administrativo.
+
 ## [0.3.0] — 2026-11-02
 ### Adicionado
 - A1: trilho lateral de navegação (768–1023 px), menu "Mais" no topo do desktop, filtros compactos do mapa, lista fixa ao lado do mapa (≥ 1440 px), painel lateral de detalhes (≥ 768 px) e formulário em duas colunas (≥ 1024 px).
