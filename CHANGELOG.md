@@ -4,6 +4,12 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Versões: [SemVe
 
 ## [Não lançado]
 
+## [0.8.0] — 2026-11-02
+### Adicionado
+- A5: trechos de rua (OpenStreetMap cortado nos cruzamentos, 22.355 trechos em blocos de ~1 km), confirmação "A água está neste trecho?" no formulário, linhas dos trechos no mapa (tracejadas com "EXEMPLO" na demonstração) e aviso sobre a extensão.
+### Corrigido
+- Texto desatualizado sobre a busca de endereços no formulário.
+
 ## [0.7.0] — 2026-11-02
 ### Adicionado
 - A4: busca de ruas, bairros e lugares com sugestões (índice local do OpenStreetMap, offline, + Photon), distrito automático pelo limite, bloqueio de ponto fora do município, sugestões de bairro, limites desenhados nos mapas e "ir para" no Mapa ao Vivo.

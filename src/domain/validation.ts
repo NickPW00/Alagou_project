@@ -18,7 +18,7 @@ export const STEPS: { id: StepId; title: string }[] = [
 export type Errors = Partial<Record<string, string>>;
 
 /** Contexto opcional: resultado da checagem do ponto contra o limite oficial do município (A4). */
-export type ValidationContext = { outsideMunicipality?: boolean };
+export type ValidationContext = { outsideMunicipality?: boolean; /** A5: há rua próxima e a pessoa ainda não confirmou o trecho. */ segmentPending?: boolean };
 
 export function validateStep(step: StepId, d: ReportDraft, now: Date = new Date(), ctx: ValidationContext = {}): Errors {
   const e: Errors = {};
@@ -30,6 +30,7 @@ export function validateStep(step: StepId, d: ReportDraft, now: Date = new Date(
       if (!d.location) e.location = 'Marque o local no mapa ou use sua localização.';
       else if (ctx.outsideMunicipality) e.location = 'O ponto marcado está fora do município de Duque de Caxias. Confira a posição no mapa.';
       if (d.postalCode && !/^\d{5}-?\d{3}$/.test(d.postalCode.trim())) e.postalCode = 'CEP no formato 00000-000.';
+      if (d.location && !ctx.outsideMunicipality && ctx.segmentPending) e.segment = 'Responda se a água está no trecho destacado.';
       break;
     case 'condition':
       if (!d.condition) e.condition = 'Escolha uma opção.';

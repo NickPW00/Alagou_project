@@ -27,6 +27,8 @@ type Props = {
   onSelectReport?: (id: string) => void;
   onSelectHistorical?: (id: string) => void;
   pick?: { value?: LngLat; onPick: (p: LngLat) => void };
+  /** A5: trecho em destaque (formulário). */
+  highlight?: [number, number][] | null;
   focus?: LngLat | null;
   label: string;
   className?: string;
@@ -51,6 +53,23 @@ function reportsToGeoJSON(reports: PublicReport[], now: Date): GeoJSON.FeatureCo
         },
       };
     }),
+  };
+}
+
+/** A5: trechos de referência dos relatos (linhas), com a mesma cor e atualidade dos pontos. */
+function segmentsToGeoJSON(reports: PublicReport[], now: Date): GeoJSON.FeatureCollection {
+  return {
+    type: 'FeatureCollection',
+    features: reports
+      .filter((r) => r.segmentLine && r.segmentLine.length > 1)
+      .map((r) => {
+        const fr = freshnessOf(r.observedAt, now);
+        return {
+          type: 'Feature',
+          geometry: { type: 'LineString', coordinates: r.segmentLine! },
+          properties: { id: r.id, color: fr === 'outdated' ? OUTDATED_COLOR : CONDITION_INFO[r.condition].color, ex: r.example ? 1 : 0 },
+        };
+      }),
   };
 }
 
@@ -145,6 +164,7 @@ export default function MapView({
   onSelectReport,
   onSelectHistorical,
   pick,
+  highlight = null,
   focus,
   label,
   className = '',
@@ -230,6 +250,17 @@ export default function MapView({
         filter: ['==', ['get', 'ex'], 1],
         layout: { visibility: 'none', 'icon-image': 'example-tag', 'icon-offset': [0, 21], 'icon-allow-overlap': true },
       });
+
+      // A5: trechos dos relatos (a partir do zoom 15) e trecho em destaque no formulário.
+      map.addSource('report-segments', { type: 'geojson', data: segmentsToGeoJSON([], new Date()) });
+      const width: maplibregl.ExpressionSpecification = ['interpolate', ['linear'], ['zoom'], 15, 6, 18, 14];
+      const casing: maplibregl.ExpressionSpecification = ['interpolate', ['linear'], ['zoom'], 15, 10, 18, 20];
+      map.addLayer({ id: 'report-seg-casing', type: 'line', source: 'report-segments', minzoom: 15, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-width': casing } });
+      map.addLayer({ id: 'report-seg', type: 'line', source: 'report-segments', minzoom: 15, filter: ['==', ['get', 'ex'], 0], layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': width } });
+      map.addLayer({ id: 'report-seg-example', type: 'line', source: 'report-segments', minzoom: 15, filter: ['==', ['get', 'ex'], 1], layout: { 'line-join': 'miter', 'line-cap': 'butt' }, paint: { 'line-color': ['get', 'color'], 'line-width': width, 'line-dasharray': [2.5, 1.5] } });
+      map.addSource('highlight', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      map.addLayer({ id: 'highlight-casing', type: 'line', source: 'highlight', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-width': 12 } });
+      map.addLayer({ id: 'highlight-line', type: 'line', source: 'highlight', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#3CA8EC', 'line-width': 7 } });
 
       map.addSource('reports', {
         type: 'geojson',
@@ -375,7 +406,9 @@ export default function MapView({
   useEffect(() => {
     if (!ready) return;
     const apply = () => {
-      (mapRef.current?.getSource('reports') as GeoJSONSource | undefined)?.setData(reportsToGeoJSON(reports, new Date()));
+      const now = new Date();
+      (mapRef.current?.getSource('reports') as GeoJSONSource | undefined)?.setData(reportsToGeoJSON(reports, now));
+      (mapRef.current?.getSource('report-segments') as GeoJSONSource | undefined)?.setData(segmentsToGeoJSON(reports, now));
     };
     apply();
     const t = window.setInterval(apply, 60000);
@@ -414,7 +447,27 @@ export default function MapView({
   }, [ready, pick?.value]);
 
   useEffect(() => {
-    if (ready && focus) mapRef.current?.flyTo({ center: [focus.lng, focus.lat], zoom: Math.max(mapRef.current.getZoom(), 15) });
+    if (!ready) return;
+    (mapRef.current?.getSource('highlight') as GeoJSONSource | undefined)?.setData({
+      type: 'FeatureCollection',
+      features: highlight && highlight.length > 1 ? [{ type: 'Feature', geometry: { type: 'LineString', coordinates: highlight }, properties: {} }] : [],
+    });
+    // Enquadra o trecho destacado para ele ficar visível ao lado do marcador.
+    if (highlight && highlight.length > 1) {
+      const lngs = highlight.map((p) => p[0]);
+      const lats = highlight.map((p) => p[1]);
+      mapRef.current?.fitBounds(
+        [
+          [Math.min(...lngs), Math.min(...lats)],
+          [Math.max(...lngs), Math.max(...lats)],
+        ],
+        { padding: 50, maxZoom: 17.5, duration: 600 },
+      );
+    }
+  }, [ready, highlight]);
+
+  useEffect(() => {
+    if (ready && focus) mapRef.current?.flyTo({ center: [focus.lng, focus.lat], zoom: Math.max(mapRef.current.getZoom(), 16.5) });
   }, [ready, focus]);
 
   return (

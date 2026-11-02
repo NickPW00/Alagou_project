@@ -17,6 +17,10 @@ export default function Legend({ showHistorical }: { showHistorical?: boolean })
           <span aria-hidden="true" className="h-4 w-4 rounded-full border-2 border-white shadow" style={{ background: OUTDATED_COLOR }} />
           Desconhecida ou desatualizada
         </li>
+        <li className="flex items-center gap-2">
+          <span aria-hidden="true" className="h-1.5 w-6 rounded-full bg-partial ring-2 ring-white" />
+          Trecho de referência (aproxime o mapa)
+        </li>
         {showHistorical && (
           <li className="flex items-center gap-2">
             <span aria-hidden="true" className="h-4 w-4 rounded-full border-[3px] border-[#6A1B9A] bg-white" />
@@ -33,7 +37,8 @@ export default function Legend({ showHistorical }: { showHistorical?: boolean })
         ))}
       </ul>
       <p className="mt-2 text-xs text-muted">
-        Cores são descrições comunitárias, não classificações oficiais. Verde não significa rua segura.
+        Cores são descrições comunitárias, não classificações oficiais. Verde não significa rua segura. A linha indica o trecho de referência
+        do relato; a água pode não ocupar toda a extensão.
       </p>
     </div>
   );

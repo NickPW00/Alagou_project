@@ -2,6 +2,7 @@
 import { DISTRICTS, type District, type LngLat } from '../domain/types';
 import { pointInGeometry, type Position } from './geometry.ts';
 import { canonicalDistrict, districtAt, municipioOf, type Limites, type PlaceEntry, type StreetEntry } from './pipeline.ts';
+import { cellsAround, type Segment } from './segments.ts';
 import { normalize } from './text.ts';
 
 const base = `${import.meta.env.BASE_URL}geo/`;
@@ -23,6 +24,14 @@ function load<T>(file: string, fallback: T): Promise<T> {
 export const loadLimites = () => load<Limites | null>('limites.geojson', null);
 export const loadStreetIndex = () => load<StreetEntry[]>('ruas-indice.json', []);
 export const loadPlaces = () => load<PlaceEntry[]>('bairros-osm.json', []);
+
+/** A5: trechos de rua das células em volta do ponto (3×3), sem repetição. */
+export async function loadSegmentsAround(p: LngLat): Promise<Segment[]> {
+  const lists = await Promise.all(cellsAround(p.lng, p.lat).map((k) => load<Segment[]>(`trechos/${k}.json`, [])));
+  const byId = new Map<string, Segment>();
+  for (const list of lists) for (const s of list) byId.set(s.id, s);
+  return [...byId.values()];
+}
 
 /** Converte o nome de distrito do IBGE para o tipo usado no app. */
 export function toDistrict(nome: string | null): District | null {

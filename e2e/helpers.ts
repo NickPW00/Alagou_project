@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type BrowserContext, type Page } from '@playwright/test';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 /** Estilo mínimo de mapa: isola os testes do serviço externo de tiles. */
 export const STUB_STYLE = {
@@ -51,6 +51,11 @@ export async function stubGeo(target: Page | BrowserContext) {
   for (const f of ['limites.geojson', 'ruas-indice.json', 'bairros-osm.json']) {
     await target.route(new RegExp(`/geo/${f.replace('.', '\\.')}$`), (r) => r.fulfill({ contentType: 'application/json', body: readFileSync(`e2e/fixtures/geo/${f}`, 'utf8') }));
   }
+  // A5: blocos de trechos sintéticos; blocos inexistentes viram lista vazia (como no app real).
+  await target.route(/\/geo\/trechos\/[^/]+\.json$/, (r) => {
+    const file = `e2e/fixtures/geo/trechos/${new URL(r.request().url()).pathname.split('/').pop()}`;
+    return r.fulfill({ contentType: 'application/json', body: existsSync(file) ? readFileSync(file, 'utf8') : '[]' });
+  });
 }
 
 /** A4: respostas simuladas do Photon. */

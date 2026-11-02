@@ -1,12 +1,13 @@
 import { Crosshair, Info, Save } from 'lucide-react';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import AddressSearch from '../components/AddressSearch';
 import MapView from '../components/LazyMap';
 import { ConditionSwatch, SafetyBox } from '../components/ui';
 import { dataSource, isDemo } from '../data';
 import { clearDraft, isOldDraft, loadDraft, saveDraft, type StoredDraft } from '../data/draftStore';
-import { limitesFonteLabel, loadLimites, loadPlaces, locate, toDistrict } from '../geo/data';
+import { limitesFonteLabel, loadLimites, loadPlaces, loadSegmentsAround, locate, toDistrict } from '../geo/data';
+import { candidatesNear, sliceAround, type Candidate } from '../geo/segments';
 import type { Limites, PlaceEntry } from '../geo/pipeline';
 import type { SubmitResult } from '../data/source';
 import { CONDITION_INFO, DEPTH_LABELS, HAZARD_LABELS, TREND_INFO } from '../domain/labels';
@@ -144,11 +145,53 @@ export default function ReportForm() {
 
   const current = STEPS[step];
   const located = draft.location ? locate(limites, draft.location) : null;
-  const vctx = { outsideMunicipality: located?.inside === false };
+
+  // A5: vias próximas ao ponto (até 30 m) para a pessoa confirmar o trecho.
+  const [cands, setCands] = useState<Candidate[]>([]);
+  const [candIdx, setCandIdx] = useState(0);
+  const [showOthers, setShowOthers] = useState(false);
+  const segRef = useRef(draft.segment);
+  segRef.current = draft.segment;
+  const locKey = draft.location ? `${draft.location.lng.toFixed(6)},${draft.location.lat.toFixed(6)}` : '';
+  useEffect(() => {
+    let alive = true;
+    setCands([]);
+    setCandIdx(0);
+    setShowOthers(false);
+    if (!draft.location) return;
+    const p = draft.location;
+    void loadSegmentsAround(p).then((segs) => {
+      if (!alive) return;
+      const c = candidatesNear([p.lng, p.lat], segs);
+      setCands(c);
+      // Mantém a escolha de um rascunho restaurado, se ela ainda corresponder a uma via próxima.
+      const cur = segRef.current;
+      if (!cur) return;
+      const i = c.findIndex((x) => x.segment.id === cur.id);
+      if (i >= 0) setCandIdx(i);
+      else if (cur.extent !== 'point') setDraft((d) => ({ ...d, segment: undefined }));
+    });
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locKey]);
+  const cand = cands[candIdx];
+  const highlight = useMemo(() => (cand ? sliceAround(cand.segment.c, cand.along) : null), [cand]);
+  const chooseSegment = (extent: 'segment' | 'point', c: Candidate | undefined = cand) => {
+    if (!c) return;
+    setDraft((d) => ({
+      ...d,
+      segment: { id: c.segment.id, name: c.segment.n, line: sliceAround(c.segment.c, c.along), extent },
+      ...(extent === 'segment' && c.segment.n && !d.street.trim() ? { street: c.segment.n } : {}),
+    }));
+  };
+  const vctx = { outsideMunicipality: located?.inside === false, segmentPending: cands.length > 0 && !draft.segment };
   /** Define o ponto e, se os limites estiverem disponíveis, o distrito correspondente. */
   const setLocation = (p: LngLat, method: NonNullable<ReportDraft['locationMethod']>, extra: Partial<ReportDraft> = {}) => {
     const { district } = locate(limites, p);
-    setDraft((d) => ({ ...d, ...extra, location: p, locationMethod: method, ...(district ? { district } : {}) }));
+    // Ponto novo: a confirmação do trecho (A5) precisa ser refeita.
+    setDraft((d) => ({ ...d, ...extra, location: p, locationMethod: method, segment: undefined, ...(district ? { district } : {}) }));
   };
   const set = <K extends keyof ReportDraft>(k: K, v: ReportDraft[K]) => setDraft((d) => ({ ...d, [k]: v }));
 
@@ -370,7 +413,7 @@ export default function ReportForm() {
                   ))}
               </datalist>
             </Field>
-            <Field id="street" label="Nome da rua ou avenida *" error={errors.street} hint="A busca de endereços com sugestões será adicionada na Fase 3.">
+            <Field id="street" label="Nome da rua ou avenida *" error={errors.street}>
               <input id="street" className={input} value={draft.street} onChange={(e) => set('street', e.target.value)} aria-invalid={!!errors.street} autoComplete="off" />
             </Field>
             <div className="grid grid-cols-2 gap-3">
@@ -405,6 +448,7 @@ export default function ReportForm() {
                 className="h-72 overflow-hidden rounded-2xl ring-1 ring-black/10 lg:h-[28rem]"
                 label="Mapa para marcar o local do alagamento"
                 pick={{ value: draft.location, onPick: (p) => setLocation(p, 'map_pin') }}
+                highlight={draft.segment?.extent === 'point' ? null : highlight}
                 focus={draft.locationMethod === 'gps' || draft.locationMethod === 'search' ? draft.location : null}
               />
               {draft.location ? (
@@ -424,6 +468,71 @@ export default function ReportForm() {
                 </>
               ) : (
                 errors.location && <p className="mt-1 text-sm font-semibold text-severe">{errors.location}</p>
+              )}
+
+              {/* A5: confirmação do trecho de referência. */}
+              {draft.location && located?.inside !== false && cand && (
+                <fieldset className="mt-3 rounded-2xl border-2 border-sky bg-sky-50 p-3" aria-describedby={errors.segment ? 'segment-error' : undefined}>
+                  <legend className="px-1 font-bold text-navy">A água está neste trecho?</legend>
+                  <p className="text-sm">
+                    <strong>{cand.segment.n ?? 'Via sem nome'}</strong> — trecho destacado no mapa, até 100 m para cada lado do ponto (até os cruzamentos).
+                  </p>
+                  <div className="mt-2 grid gap-2 sm:grid-cols-3">
+                    {(
+                      [
+                        ['segment', 'Sim, neste trecho'],
+                        ['point', 'Só perto do ponto'],
+                      ] as const
+                    ).map(([ext, txt]) => (
+                      <button
+                        key={ext}
+                        type="button"
+                        aria-pressed={draft.segment?.extent === ext && draft.segment.id === cand.segment.id}
+                        onClick={() => chooseSegment(ext)}
+                        className={`min-h-11 rounded-xl border-2 px-3 font-semibold ${draft.segment?.extent === ext && draft.segment.id === cand.segment.id ? 'border-navy bg-navy text-white' : 'border-navy/30 bg-white text-navy'}`}
+                      >
+                        {txt}
+                      </button>
+                    ))}
+                    {cands.length > 1 && (
+                      <button
+                        type="button"
+                        aria-expanded={showOthers}
+                        onClick={() => setShowOthers((v) => !v)}
+                        className="min-h-11 rounded-xl border-2 border-navy/30 bg-white px-3 font-semibold text-navy"
+                      >
+                        Escolher outra rua
+                      </button>
+                    )}
+                  </div>
+                  {showOthers && (
+                    <ul className="mt-2 space-y-1">
+                      {cands.map((c, i) =>
+                        i === candIdx ? null : (
+                          <li key={c.segment.id}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCandIdx(i);
+                                setShowOthers(false);
+                                setDraft((d) => ({ ...d, segment: undefined }));
+                              }}
+                              className="min-h-11 w-full rounded-xl bg-white px-3 text-left text-sm font-medium text-navy ring-1 ring-navy/20"
+                            >
+                              {c.segment.n ?? 'Via sem nome'} <span className="text-muted">· a {Math.round(c.distance)} m do ponto</span>
+                            </button>
+                          </li>
+                        ),
+                      )}
+                    </ul>
+                  )}
+                  <p className="mt-2 text-xs text-muted">A linha indica o trecho de referência; a água pode não ocupar toda a extensão.</p>
+                  {errors.segment && (
+                    <p id="segment-error" className="mt-1 text-sm font-semibold text-severe">
+                      {errors.segment}
+                    </p>
+                  )}
+                </fieldset>
               )}
             </div>
           </div>
@@ -539,6 +648,7 @@ export default function ReportForm() {
                 ['Referência', draft.referencePoint || '—'],
                 ['Situação', draft.condition ? CONDITION_INFO[draft.condition].question : '—'],
                 ['Água', draft.trend ? TREND_INFO[draft.trend].question : '—'],
+                ['Trecho', draft.segment ? (draft.segment.extent === 'segment' ? `${draft.segment.name ?? 'Via sem nome'} (trecho destacado, até 100 m para cada lado)` : 'Só perto do ponto') : 'Ponto no mapa'],
                 ['Profundidade', draft.depth ? DEPTH_LABELS[draft.depth] : 'Não informada'],
                 ['Outros problemas', draft.hazards.length ? draft.hazards.map((h) => HAZARD_LABELS[h]).join(', ') : 'Nenhum'],
                 ['Descrição', draft.description || '—'],

@@ -51,4 +51,47 @@ Fora do escopo: associação no servidor (Fase 3, tabela `street_segments`) e es
 6. A suíte, a matriz de telas e a acessibilidade continuam passando.
 
 ## 3. Como foi
-*(preenchido ao concluir o item)*
+
+**Status:** implementado e testado (versão 0.8.0).
+
+### 3.1 Entregue
+- **Trechos reais** gerados pelo robô: **22.355 trechos** de Duque de Caxias em **330 blocos**.
+  - Peso comprimido por bloco: mediana 1,6 kB, 90% abaixo de 4,9 kB, máximo 7,6 kB.
+  - Os 9 blocos em volta de um ponto somam ~14 kB no caso típico e ~66 kB no pior caso.
+  - Medição registrada em `public/geo/fontes.json`.
+- `src/geo/segments.ts`: divisão nos cruzamentos, ponto mais próximo, recorte a ±100 m limitado aos cruzamentos, vias candidatas (até 30 m, uma por nome) e células.
+- **Formulário:**
+  - "A água está neste trecho?" com "Sim, neste trecho", "Só perto do ponto" e "Escolher outra rua" (com a distância de cada via);
+  - preenchimento do nome da rua;
+  - resposta obrigatória quando há rua próxima;
+  - mover o ponto refaz a pergunta;
+  - o rascunho guarda a escolha;
+  - o trecho aparece na revisão;
+  - o mapa enquadra o trecho destacado ([print](../img/a5-trecho-formulario.png)).
+- **Mapa:** linhas na cor da situação a partir do zoom 15, cinza quando desatualizadas e **tracejadas com o selo "EXEMPLO"** na demonstração ([print](../img/a5-trecho-exemplo-mapa.png)).
+- **Detalhe do relato e legenda** com o aviso sobre a extensão.
+- **Demonstração:** os relatos fictícios usam o mesmo método. 4 dos 8 ganharam trecho (rua real a até 30 m) e 4 ficaram como ponto, sem trecho inventado.
+
+### 3.2 Desvios e ajustes feitos na revisão
+| Situação | O que foi feito |
+|---|---|
+| No zoom inicial, o trecho de 200 m quase sumia atrás do marcador. | O mapa enquadra o trecho destacado (até zoom 17,5), e focar um relato aproxima até zoom 16,5. |
+| O tracejado com traços curtos parecia "losangos". | Traços mais longos (2,5 × 1,5). |
+| O detalhe de um relato fictício citaria o nome de uma rua real ("Trecho de referência na Avenida…"). | Os trechos de demonstração não guardam o nome da rua real. |
+| Texto desatualizado sob o campo de rua ("a busca será adicionada na Fase 3"). | Removido; a busca já existe desde o A4. |
+
+### 3.3 Resultados
+- Unitários: cruzamento em T e em X, laço, comprimento, projeção, recorte (meio, ponta, trecho curto), candidatas (ordem, distância máxima, uma por nome), células e validação da confirmação (55/55 no total).
+- Ponta a ponta (`e2e/segment.spec.ts`, celular e desktop, trechos sintéticos):
+  - confirmação obrigatória;
+  - "Escolher outra rua";
+  - nome preenchido;
+  - trecho na revisão e no detalhe após o envio;
+  - "Só perto do ponto";
+  - sem rua próxima, segue sem perguntar.
+- Suíte completa: **100 passaram**, 31 ignorados (por desenho), **0 falhas**.
+- Revisão com dados reais: um ponto na Avenida Presidente Kennedy detectou a via correta e destacou o trecho.
+
+### 3.4 Pendências
+- Associação relato → trecho no servidor e estatísticas por trecho (Fases 3 e 6).
+- Pista dupla: hoje a pessoa escolhe o sentido em "Escolher outra rua"; a opção "ambos os sentidos" fica para avaliação com uso real.

@@ -12,7 +12,7 @@ Autorizado pela coordenação em 02/11/2026. Decisões tomadas:
 | A2 Selo "EXEMPLO" | [A2-selo-exemplo.md](A2-selo-exemplo.md) | **implementado e testado** (0.4.0) |
 | A3 App instalável + rascunho local | [A3-pwa-rascunho.md](A3-pwa-rascunho.md) | **implementado e testado** (0.5.0) |
 | A4 Busca de endereços + limites IBGE | [A4-busca-limites.md](A4-busca-limites.md) | **implementado e testado** (0.7.0) — limites do OSM até gerar com o IBGE |
-| A5 Trecho da rua | [A5-trecho-da-rua.md](A5-trecho-da-rua.md) | em desenvolvimento |
+| A5 Trecho da rua | [A5-trecho-da-rua.md](A5-trecho-da-rua.md) | **implementado e testado** (0.8.0) |
 | A6 Conteúdo de segurança e educativo | — | planejado |
 | A7 INMET + previsão Open-Meteo | — | planejado |
 | A8 Política de Privacidade e Termos (rascunhos) | — | planejado |

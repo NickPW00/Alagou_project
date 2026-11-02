@@ -81,6 +81,9 @@ export type PublicReport = {
   photoCount: number;
   /** Dado fictício de demonstração (selo "EXEMPLO"). */
   example?: boolean;
+  /** A5: trecho de referência (até 100 m para cada lado do ponto), quando confirmado. */
+  segmentLine?: [number, number][];
+  segmentName?: string;
 };
 
 export type HistoricalReport = {
@@ -106,6 +109,8 @@ export type ReportDraft = {
   segmentDescription: string;
   location?: LngLat;
   locationMethod?: 'map_pin' | 'gps' | 'search';
+  /** A5: trecho escolhido pela pessoa. extent 'segment' = "Sim, neste trecho"; 'point' = "Só perto do ponto". */
+  segment?: { id: string; name?: string; line: [number, number][]; extent: 'segment' | 'point' };
   condition?: StreetCondition;
   trend?: WaterTrend;
   depth?: DepthEstimate;

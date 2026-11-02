@@ -98,6 +98,13 @@ export default function ReportDetail({ report, onClose }: { report: PublicReport
         <dd>{report.photoCount ? `${report.photoCount}` : 'Sem fotos'}</dd>
       </dl>
 
+      {report.segmentLine && (
+        <p className="mt-3 rounded-lg bg-sky-50 p-2 text-sm text-navy">
+          Trecho de referência{report.segmentName ? ` na ${report.segmentName}` : ''} destacado no mapa (aproxime para ver), até 100 m para cada lado do
+          ponto. A água pode não ocupar toda a extensão.
+        </p>
+      )}
+
       {report.hazards.length > 0 && (
         <div className="mt-3">
           <p className="text-sm font-semibold">Outros problemas relatados</p>

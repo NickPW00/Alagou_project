@@ -80,8 +80,27 @@ export class DemoSource implements DataSource {
   private listeners = new Set<() => void>();
   private seq = 0;
 
-  constructor(now: number = Date.now()) {
+  constructor(now: number = Date.now(), resolveSegments = typeof window !== 'undefined' && !import.meta.env.VITEST) {
     this.reports = seed(now);
+    if (resolveSegments) void this.resolveSegments();
+  }
+
+  /**
+   * A5: associa cada relato fictício ao trecho de rua real mais próximo (até 30 m), com o mesmo método do formulário.
+   * Sem rua próxima, o relato continua só como ponto. Nenhuma geometria é inventada.
+   */
+  async resolveSegments() {
+    const { loadSegmentsAround } = await import('../geo/data');
+    const { candidatesNear, sliceAround } = await import('../geo/segments');
+    let changed = false;
+    for (const r of this.reports) {
+      const c = candidatesNear([r.location.lng, r.location.lat], await loadSegmentsAround(r.location))[0];
+      if (!c) continue;
+      r.segmentLine = sliceAround(c.segment.c, c.along);
+      // Sem o nome da rua real: o relato é fictício e não deve citar uma rua de verdade.
+      changed = true;
+    }
+    if (changed) this.emit();
   }
 
   async listReports() {
@@ -121,6 +140,7 @@ export class DemoSource implements DataSource {
       history: [{ at: now, condition: d.condition, trend: d.trend, note: 'Relato enviado (demonstração)' }],
       photoCount: 0,
       example: true,
+      ...(d.segment?.extent === 'segment' ? { segmentLine: d.segment.line, segmentName: d.segment.name } : {}),
     });
     this.emit();
     return { id, status: 'published' };

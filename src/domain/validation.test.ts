@@ -51,3 +51,10 @@ describe('validação do formulário', () => {
     expect(isHistorical('2026-11-02T10:00:00Z', now)).toBe(false);
   });
 });
+
+describe('confirmação do trecho (A5)', () => {
+  it('exige resposta quando há rua próxima', () => {
+    expect(validateStep('where', base, now, { segmentPending: true }).segment).toMatch(/trecho destacado/);
+    expect(validateStep('where', base, now, { segmentPending: false }).segment).toBeUndefined();
+  });
+});
