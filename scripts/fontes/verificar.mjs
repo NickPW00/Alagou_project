@@ -8,7 +8,7 @@ const args = process.argv.slice(2);
 const out = resolve(args.includes('--out') ? args[args.indexOf('--out') + 1] : 'docs/fontes/verificacao.json');
 
 const ALVOS = [
-  { fonte: 'INMET', descricao: 'Avisos meteorológicos ativos (API)', url: 'https://apiprevmet3.inmet.gov.br/avisos/ativos', amostra: true },
+  { fonte: 'INMET', descricao: 'Avisos meteorológicos ativos (API)', url: 'https://apiprevmet3.inmet.gov.br/avisos/ativos', estrutura: true },
   { fonte: 'INMET', descricao: 'Avisos meteorológicos (RSS)', url: 'https://apiprevmet3.inmet.gov.br/avisos/rss' },
   { fonte: 'INMET', descricao: 'Previsão por município (API)', url: 'https://apiprevmet3.inmet.gov.br/previsao/3301702' },
   { fonte: 'INMET', descricao: 'Portal de alertas (link da tela de Alertas)', url: 'https://alertas2.inmet.gov.br/' },
@@ -36,7 +36,7 @@ async function probe(alvo) {
     const body = await res.text();
     // Amostra da estrutura de respostas JSON (chaves e o primeiro item de cada lista), para documentar o formato.
     let amostra;
-    if (alvo.amostra) {
+    if (alvo.estrutura) {
       try {
         const j = JSON.parse(body);
         amostra = Object.fromEntries(
