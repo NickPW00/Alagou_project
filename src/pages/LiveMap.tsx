@@ -1,6 +1,6 @@
 import { Layers, List, Map as MapIcon, SlidersHorizontal } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import AddressSearch from '../components/AddressSearch';
 import Legend from '../components/Legend';
 import MapView from '../components/LazyMap';
@@ -60,7 +60,19 @@ export default function LiveMap() {
   const [filter, setFilter] = useState<ReportFilter>({ query: '', district: '', period: 'now' });
   const [view, setView] = useState<'map' | 'list'>('map');
   const [mapStatus, setMapStatus] = useState<'loading' | 'ready' | 'error'>('loading');
-  const [selected, setSelected] = useState<string | null>(null);
+  // A9: o relato aberto fica no endereço (?relato=<id>), permitindo link direto e compartilhamento.
+  const [params, setParams] = useSearchParams();
+  const selected = params.get('relato');
+  const setSelected = (id: string | null) =>
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (id) next.set('relato', id);
+        else next.delete('relato');
+        return next;
+      },
+      { replace: true },
+    );
   const [selectedHist, setSelectedHist] = useState<string | null>(null);
   const [legendOpen, setLegendOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -208,6 +220,18 @@ export default function LiveMap() {
           )}
 
           {report && <ReportDetail report={report} onClose={() => setSelected(null)} />}
+          {selected && !report && !loading && (
+            <div role="alert" className="absolute inset-x-3 top-12 z-40 rounded-2xl bg-white p-4 shadow-xl ring-1 ring-black/10 md:left-4 md:right-auto md:w-96">
+              <p className="font-bold text-navy">Relato não encontrado.</p>
+              <p className="mt-1 text-sm text-muted">
+                Ele pode ter sido removido pela moderação ou ter saído do período exibido. Na demonstração, relatos enviados pelo formulário existem
+                só no aparelho de quem enviou.
+              </p>
+              <button type="button" onClick={() => setSelected(null)} className="mt-3 min-h-11 rounded-xl border border-navy/30 px-4 font-semibold text-navy">
+                Fechar
+              </button>
+            </div>
+          )}
           {hist && (
             <div
               role="dialog"

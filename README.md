@@ -13,7 +13,9 @@ Uma iniciativa do projeto Meninas pelo Clima — LabPENSo/UERJ.
 ## Status
 
 - Fases 0 e 1 (diagnóstico e arquitetura): aprovadas.
-- Fase 2 (estrutura visual): concluída, **aguardando aprovação**. Ainda não há banco de dados; os dados de demonstração são fictícios e sinalizados.
+- Fase 2 (estrutura visual): concluída.
+- **Pacote A** (itens sem banco de dados: responsividade, selo EXEMPLO, app instalável/offline, busca de endereços e limites, trecho da rua, conteúdo educativo, avisos do INMET e previsão, privacidade, link direto + logomarcas): **concluído (0.12.0), aguardando validação** — ver [docs/pacote-a](docs/pacote-a/README.md).
+- Ainda não há banco de dados: os relatos de demonstração são fictícios e sinalizados (faixa amarela e selo EXEMPLO).
 
 **Demonstração online:** https://nickpw00.github.io/Alagou_project/ (dados fictícios; publicada automaticamente a cada push — ver [guia](docs/publicacao.md)).
 
@@ -28,7 +30,10 @@ Uma iniciativa do projeto Meninas pelo Clima — LabPENSo/UERJ.
 Documentos:
 - [Diagnóstico e arquitetura](docs/00-fase-0-1-diagnostico-e-arquitetura.md)
 - [Fase 2 — estrutura visual e testes](docs/01-fase-2-estrutura-visual.md)
-- [Plano das próximas etapas (aguardando autorização)](docs/02-plano-proximas-etapas.md)
+- [Plano das próximas etapas](docs/02-plano-proximas-etapas.md)
+- [Pacote A — documentos de cada item](docs/pacote-a/README.md)
+- [Processo de desenvolvimento](docs/processo-desenvolvimento.md)
+- [Changelog](CHANGELOG.md)
 - [Pendências](docs/pendencias.md)
 - [Guia de marca](docs/marca/README.md)
 - [Publicação da demonstração](docs/publicacao.md)

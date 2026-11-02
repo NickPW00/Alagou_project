@@ -4,6 +4,10 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Versões: [SemVe
 
 ## [Não lançado]
 
+## [0.12.0] — 2026-11-02
+### Adicionado
+- A9: link direto para um relato (`/mapa?relato=<id>`), compartilhamento com link e aviso de não oficial, mensagem para relato não encontrado.
+
 ## [0.11.0] — 2026-11-02
 ### Adicionado
 - A8: rascunhos (não vigentes) da Política de Privacidade e dos Termos de Participação em `docs/legal/`; seção "Seus dados hoje" na página Sobre, com os serviços externos usados e links para os rascunhos.

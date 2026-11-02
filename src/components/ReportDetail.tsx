@@ -1,6 +1,7 @@
 import { CheckCircle2, History, RefreshCw, Share2, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { DEPTH_LABELS, HAZARD_LABELS, VERIFICATION_LABELS } from '../domain/labels';
+import { reportUrl, shareText } from '../domain/links';
 import { formatBrasilia, freshnessOf, relativeTime } from '../domain/time';
 import type { PublicReport } from '../domain/types';
 import { ConditionBadge, ExampleTag, FreshnessTag, TrendBadge } from './ui';
@@ -34,16 +35,23 @@ export default function ReportDetail({ report, onClose }: { report: PublicReport
   }, [onClose]);
 
   const fr = freshnessOf(report.observedAt);
+  // A9: compartilha o link direto do relato.
   const share = async () => {
-    const text = `Alag@u: ${report.street}, ${report.neighborhood} — informação comunitária, não é alerta oficial.`;
-    try {
-      if (navigator.share) await navigator.share({ title: 'Alag@u', text, url: location.href });
-      else {
-        await navigator.clipboard.writeText(text);
-        setNotice('Texto copiado para compartilhar.');
+    const url = reportUrl(report.id);
+    const text = shareText(report);
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Alag@u', text, url });
+      } catch {
+        /* compartilhamento cancelado */
       }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(`${text} ${url}`);
+      setNotice('Link copiado. Cole no WhatsApp ou onde quiser compartilhar.');
     } catch {
-      /* compartilhamento cancelado */
+      setNotice(`Copie o link: ${url}`);
     }
   };
   const phase4 = () => setNotice('Confirmações e atualizações serão habilitadas na Fase 4 (com login e controle de duplicidade).');

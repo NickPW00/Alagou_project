@@ -28,4 +28,28 @@ Fora do escopo: links para pontos arbitrários do mapa e prévias com imagem ao 
 5. A suíte e a matriz de telas continuam passando.
 
 ## 3. Como foi
-*(preenchido ao concluir o item)*
+
+**Status:** implementado e testado (versão 0.12.0).
+
+### 3.1 Entregue
+- `?relato=<id>` no Mapa ao Vivo: abre o relato, o detalhe e o mapa aproximado. O endereço é atualizado ao abrir ou fechar um relato, com `replace` (sem novas entradas no "voltar").
+- **Compartilhar** envia o link direto, pelo menu nativo do celular ou copiando "texto + link". O texto inclui a situação da rua e "(informação comunitária, não é alerta oficial)". Se a cópia falhar, o link aparece na tela para copiar à mão.
+- **"Relato não encontrado"** com explicação, inclusive o caso da demonstração.
+- `src/domain/links.ts` (`reportUrl`, `shareText`), testado.
+
+### 3.2 Desvios
+Nenhum.
+
+### 3.3 Resultados
+- Unitários: link com subcaminho e identificador codificado; texto de compartilhamento.
+- Ponta a ponta (`e2e/deeplink.spec.ts`, celular e desktop):
+  - link abre o relato;
+  - fechar limpa o endereço;
+  - selecionar atualiza o endereço **sem aumentar o histórico**;
+  - compartilhar copia o link, e **o link copiado abre o mesmo relato**;
+  - identificador inexistente mostra a mensagem.
+- Verificação no **subcaminho do GitHub Pages** (`/Alagou_project/mapa?relato=d6`, primeiro acesso via `404.html`): o relato abre. O servidor responde com o código 404, limitação já documentada em `docs/publicacao.md`.
+- Suíte completa: unitários **67/67**; ponta a ponta **122 passaram**, 31 ignorados (por desenho), **0 falhas**.
+
+### 3.4 Pendências
+- Prévia com imagem e título ao compartilhar (exige servidor; avaliar na Fase 3 ou 7).
