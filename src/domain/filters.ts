@@ -1,12 +1,8 @@
 import { HISTORICAL_AFTER_HOURS } from '../config/settings';
+import { normalize } from '../geo/text';
 import type { District, PublicReport } from './types';
 
-export const normalize = (s: string) =>
-  s
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-    .trim();
+export { normalize } from '../geo/text';
 
 export type ReportFilter = { query: string; district: District | ''; period: 'now' | 'history' };
 

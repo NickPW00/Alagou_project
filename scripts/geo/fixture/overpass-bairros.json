@@ -1,0 +1,44 @@
+{
+ "elements": [
+  {
+   "type": "node",
+   "id": 900,
+   "lat": -22.79,
+   "lon": -43.39,
+   "tags": {
+    "place": "suburb",
+    "name": "Bairro Teste Sul"
+   }
+  },
+  {
+   "type": "node",
+   "id": 901,
+   "lat": -22.6,
+   "lon": -43.2,
+   "tags": {
+    "place": "neighbourhood",
+    "name": "Bairro Teste Norte"
+   }
+  },
+  {
+   "type": "node",
+   "id": 902,
+   "lat": -22.6,
+   "lon": -43.2,
+   "tags": {
+    "place": "neighbourhood",
+    "name": "Bairro Teste Norte"
+   }
+  },
+  {
+   "type": "node",
+   "id": 903,
+   "lat": -22.95,
+   "lon": -43.0,
+   "tags": {
+    "place": "suburb",
+    "name": "Fora"
+   }
+  }
+ ]
+}

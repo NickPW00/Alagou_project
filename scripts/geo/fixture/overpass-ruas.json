@@ -1,0 +1,162 @@
+{
+ "elements": [
+  {
+   "type": "way",
+   "id": 1,
+   "tags": {
+    "highway": "residential",
+    "name": "Rua das Flores"
+   },
+   "nodes": [
+    10,
+    11,
+    12
+   ],
+   "geometry": [
+    {
+     "lat": -22.8,
+     "lon": -43.4
+    },
+    {
+     "lat": -22.799,
+     "lon": -43.399
+    },
+    {
+     "lat": -22.798,
+     "lon": -43.398
+    }
+   ]
+  },
+  {
+   "type": "way",
+   "id": 2,
+   "tags": {
+    "highway": "residential",
+    "name": "Rua das Flores"
+   },
+   "nodes": [
+    20,
+    21
+   ],
+   "geometry": [
+    {
+     "lat": -22.798,
+     "lon": -43.398
+    },
+    {
+     "lat": -22.797,
+     "lon": -43.397
+    }
+   ]
+  },
+  {
+   "type": "way",
+   "id": 3,
+   "tags": {
+    "highway": "residential",
+    "name": "Rua das Flores"
+   },
+   "nodes": [
+    30,
+    31
+   ],
+   "geometry": [
+    {
+     "lat": -22.72,
+     "lon": -43.33
+    },
+    {
+     "lat": -22.721,
+     "lon": -43.331
+    }
+   ]
+  },
+  {
+   "type": "way",
+   "id": 4,
+   "tags": {
+    "highway": "residential",
+    "name": "Rua das Flores"
+   },
+   "nodes": [
+    40,
+    41
+   ],
+   "geometry": [
+    {
+     "lat": -22.6,
+     "lon": -43.2
+    },
+    {
+     "lat": -22.601,
+     "lon": -43.201
+    }
+   ]
+  },
+  {
+   "type": "way",
+   "id": 5,
+   "tags": {
+    "highway": "primary",
+    "name": "Avenida Exemplo Central"
+   },
+   "nodes": [
+    50,
+    51
+   ],
+   "geometry": [
+    {
+     "lat": -22.75,
+     "lon": -43.25
+    },
+    {
+     "lat": -22.75,
+     "lon": -43.24
+    }
+   ]
+  },
+  {
+   "type": "way",
+   "id": 6,
+   "tags": {
+    "highway": "residential"
+   },
+   "nodes": [
+    60,
+    61
+   ],
+   "geometry": [
+    {
+     "lat": -22.7,
+     "lon": -43.3
+    },
+    {
+     "lat": -22.701,
+     "lon": -43.301
+    }
+   ]
+  },
+  {
+   "type": "way",
+   "id": 7,
+   "tags": {
+    "highway": "residential",
+    "name": "Rua Fora do Município"
+   },
+   "nodes": [
+    70,
+    71
+   ],
+   "geometry": [
+    {
+     "lat": -22.9,
+     "lon": -43.0
+    },
+    {
+     "lat": -22.91,
+     "lon": -43.01
+    }
+   ]
+  }
+ ]
+}
