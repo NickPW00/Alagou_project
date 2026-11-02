@@ -1,0 +1,49 @@
+@import 'tailwindcss';
+
+/* Paleta PROVISÓRIA do Alag@u — será ajustada quando a identidade oficial
+   do Meninas pelo Clima for fornecida. */
+@theme {
+  --color-navy: #0b2545;
+  --color-navy-700: #13315c;
+  --color-sky: #13a3e0;
+  --color-sky-50: #e8f6fd;
+  --color-ok: #2e7d32;
+  --color-attention: #f2c200;
+  --color-partial: #ef6c00;
+  --color-severe: #c62828;
+  --color-unknown: #757575;
+  --color-ink: #1a1a1a;
+  --color-muted: #4b5563;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  background: #f5f8fb;
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
+}
+:focus-visible {
+  outline: 3px solid var(--color-sky);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+.sr-only-focusable:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
