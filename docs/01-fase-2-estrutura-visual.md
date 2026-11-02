@@ -59,7 +59,7 @@ Legenda: ✅ implementado e testado · 🟡 implementado parcialmente (interface
 | `npm run test:e2e` (Playwright, Chromium, perfis **celular (Pixel 7)** e **desktop 1280 px**): todas as páginas, acessibilidade (axe, WCAG 2.0/2.1/2.2 A e AA, sem violações sérias ou críticas), sem rolagem horizontal, navegação por teclado, menu "Mais", mapa e filtros, falha do mapa, fluxo completo das 8 etapas até o relato aparecer no mapa, GPS negado, moderação | **35 passaram, 1 ignorado** (o teste do menu "Mais" é exclusivo do celular) |
 | `npm run build` | ok |
 
-Os testes E2E substituem o estilo do mapa por um fundo liso, para não depender do serviço externo de mapas, que não está acessível neste ambiente de desenvolvimento. Portanto, **o fundo cartográfico real do OpenFreeMap ainda não foi visto funcionando**: precisa ser conferido num navegador comum.
+Os testes E2E substituem o estilo do mapa por um fundo liso, para não depender do serviço externo de mapas, que não está acessível neste ambiente de desenvolvimento. O fundo cartográfico real do OpenFreeMap foi conferido depois, no site publicado (02/11/2026).
 
 Problemas encontrados pelos testes e corrigidos nesta fase:
 - o "worker" do MapLibre não carregava com o Vite;

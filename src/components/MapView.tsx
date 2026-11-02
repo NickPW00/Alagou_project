@@ -63,25 +63,49 @@ function historicalToGeoJSON(items: HistoricalReport[]): GeoJSON.FeatureCollecti
   };
 }
 
-/** Desenha setas de tendência em canvas (não depende de fontes do estilo). */
+/**
+ * Desenha o selo de tendência em canvas (não depende de fontes do estilo do mapa).
+ * 64 px com pixelRatio 2 → 32 px na tela: círculo azul-escuro, borda branca e seta branca grossa.
+ */
 function trendImage(trend: WaterTrend): ImageData {
-  const s = 40;
+  const s = 64;
   const c = document.createElement('canvas');
   c.width = c.height = s;
   const g = c.getContext('2d')!;
-  g.fillStyle = '#FFFFFF';
-  g.strokeStyle = '#0B2545';
-  g.lineWidth = 3;
+  const m = s / 2;
+  g.fillStyle = '#0B2545';
+  g.strokeStyle = '#FFFFFF';
+  g.lineWidth = 5;
   g.beginPath();
-  g.arc(s / 2, s / 2, s / 2 - 2, 0, Math.PI * 2);
+  g.arc(m, m, m - 4, 0, Math.PI * 2);
   g.fill();
   g.stroke();
-  g.fillStyle = '#0B2545';
-  g.font = 'bold 24px Arial, sans-serif';
-  g.textAlign = 'center';
-  g.textBaseline = 'middle';
-  const ch = { rising: '↑', stable: '→', receding: '↓', unknown: '?' }[trend];
-  g.fillText(ch, s / 2, s / 2 + 1);
+
+  g.strokeStyle = '#FFFFFF';
+  g.fillStyle = '#FFFFFF';
+  g.lineWidth = 7;
+  g.lineCap = 'round';
+  g.lineJoin = 'round';
+  if (trend === 'unknown') {
+    g.font = 'bold 38px Arial, Helvetica, sans-serif';
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.fillText('?', m, m + 2);
+  } else {
+    // Seta desenhada apontando para cima e girada conforme a tendência.
+    const angle = { rising: 0, stable: Math.PI / 2, receding: Math.PI }[trend];
+    g.save();
+    g.translate(m, m);
+    g.rotate(angle);
+    g.beginPath();
+    g.moveTo(0, 15);
+    g.lineTo(0, -13);
+    g.moveTo(-11, -2);
+    g.lineTo(0, -14);
+    g.lineTo(11, -2);
+    g.stroke();
+    g.restore();
+  }
   return g.getImageData(0, 0, s, s);
 }
 
@@ -228,8 +252,8 @@ export default function MapView({
         filter: ['!', ['has', 'point_count']],
         layout: {
           'icon-image': ['concat', 'trend-', ['get', 'trend']],
-          'icon-size': 0.8,
-          'icon-offset': [16, -16],
+          'icon-size': 1,
+          'icon-offset': [18, -18],
           'icon-allow-overlap': true,
         },
       });
