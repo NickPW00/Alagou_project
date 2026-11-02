@@ -9,10 +9,13 @@ Uma iniciativa do projeto Meninas pelo Clima — LabPENSo/UERJ.
 - Fases 0 e 1 (diagnóstico e arquitetura): aprovadas.
 - Fase 2 (estrutura visual): concluída, **aguardando aprovação**. Ainda não há banco de dados; os dados de demonstração são fictícios e sinalizados.
 
+**Demonstração online:** https://nickpw00.github.io/Alagou_project/ (dados fictícios; publicada automaticamente a cada push — ver [guia](docs/publicacao.md)).
+
 Documentos:
 - [Diagnóstico e arquitetura](docs/00-fase-0-1-diagnostico-e-arquitetura.md)
 - [Fase 2 — estrutura visual e testes](docs/01-fase-2-estrutura-visual.md)
 - [Pendências](docs/pendencias.md)
+- [Publicação da demonstração](docs/publicacao.md)
 
 ## Desenvolvimento
 

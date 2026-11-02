@@ -20,7 +20,7 @@ import { Disclaimer } from './ui';
 export function Brand({ compact = false }: { compact?: boolean }) {
   return (
     <span className="flex items-center gap-2">
-      <img src="/alagou-icon.svg" alt="" width={compact ? 32 : 40} height={compact ? 32 : 40} />
+      <img src={`${import.meta.env.BASE_URL}alagou-icon.svg`} alt="" width={compact ? 32 : 40} height={compact ? 32 : 40} />
       <span className="leading-tight">
         <span className={`block font-black tracking-tight ${compact ? 'text-xl' : 'text-2xl'}`}>Alag@u</span>
         {!compact && <span className="block text-xs font-medium text-sky-50/90">Alagou? Avisou!</span>}
