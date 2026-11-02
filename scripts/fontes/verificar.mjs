@@ -8,7 +8,7 @@ const args = process.argv.slice(2);
 const out = resolve(args.includes('--out') ? args[args.indexOf('--out') + 1] : 'docs/fontes/verificacao.json');
 
 const ALVOS = [
-  { fonte: 'INMET', descricao: 'Avisos meteorológicos ativos (API)', url: 'https://apiprevmet3.inmet.gov.br/avisos/ativos' },
+  { fonte: 'INMET', descricao: 'Avisos meteorológicos ativos (API)', url: 'https://apiprevmet3.inmet.gov.br/avisos/ativos', amostra: true },
   { fonte: 'INMET', descricao: 'Avisos meteorológicos (RSS)', url: 'https://apiprevmet3.inmet.gov.br/avisos/rss' },
   { fonte: 'INMET', descricao: 'Previsão por município (API)', url: 'https://apiprevmet3.inmet.gov.br/previsao/3301702' },
   { fonte: 'INMET', descricao: 'Portal de alertas (link da tela de Alertas)', url: 'https://alertas2.inmet.gov.br/' },
@@ -34,12 +34,26 @@ async function probe(alvo) {
       headers: { 'User-Agent': 'Alagou/1.0 (verificacao de fontes; projeto Meninas pelo Clima - LabPENSo/UERJ)', Origin: 'https://nickpw00.github.io' },
     });
     const body = await res.text();
+    // Amostra da estrutura de respostas JSON (chaves e o primeiro item de cada lista), para documentar o formato.
+    let amostra;
+    if (alvo.amostra) {
+      try {
+        const j = JSON.parse(body);
+        amostra = Object.fromEntries(
+          Object.entries(j).map(([k, v]) => [k, Array.isArray(v) ? { total: v.length, primeiro: v[0] ?? null, de_duque_de_caxias: v.filter((x) => JSON.stringify(x).includes('3301702')).length } : v]),
+        );
+      } catch {
+        amostra = undefined;
+      }
+    }
     return {
+      ...(amostra ? { amostra } : {}),
       ...alvo,
       ok: res.ok,
       http: res.status,
       url_final: res.url,
       tipo: res.headers.get('content-type'),
+      compressao: res.headers.get('content-encoding'),
       cors: res.headers.get('access-control-allow-origin'),
       bytes: body.length,
       inicio: body.slice(0, 300).replace(/\s+/g, ' '),
