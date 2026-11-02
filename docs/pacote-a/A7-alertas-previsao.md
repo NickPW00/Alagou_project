@@ -75,7 +75,7 @@ Arquivo completo: [`docs/fontes/verificacao.json`](../fontes/verificacao.json).
 | Planejado (desenho do A7) | Feito | Motivo |
 |---|---|---|
 | Se o INMET fosse acessível, propor a integração para aprovação | **Integrado** | O plano aprovado pela coordenação (item A7: "se houver feed aberto, avisos com fonte, horário e link original") já autorizava a integração caso fosse viável, e a verificação mostrou que é. |
-| — | O link "INMET — Avisos" passou de `alertas2.inmet.gov.br` para `avisos.inmet.gov.br` | O primeiro recusou conexão. O segundo é o indicado pelo próprio INMET no RSS. Ainda precisa de confirmação por acesso (incluído no robô). |
+| — | O link "INMET — Avisos" passou de `alertas2.inmet.gov.br` para `avisos.inmet.gov.br` | O primeiro recusou conexão. O segundo é o indicado pelo próprio INMET no RSS e foi **confirmado pelo robô (HTTP 200)** na verificação de 02/11/2026, 23:26 UTC. |
 | Atualização por tarefa automática sem banco | Consulta direta pelo navegador | A API libera CORS. Uma tarefa agendada criaria commits a cada execução e atrasaria os avisos. |
 
 ### 3.4 Resultados
