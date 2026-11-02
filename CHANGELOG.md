@@ -4,6 +4,10 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Versões: [SemVe
 
 ## [Não lançado]
 
+## [0.9.0] — 2026-11-02
+### Adicionado
+- A6: textos (rascunho em revisão) dos módulos 1–5 do Aprenda e Previna, guia de segurança antes/durante/depois e quiz de 4 perguntas; teste-guarda das regras do conteúdo.
+
 ## [0.8.0] — 2026-11-02
 ### Adicionado
 - A5: trechos de rua (OpenStreetMap cortado nos cruzamentos, 22.355 trechos em blocos de ~1 km), confirmação "A água está neste trecho?" no formulário, linhas dos trechos no mapa (tracejadas com "EXEMPLO" na demonstração) e aviso sobre a extensão.

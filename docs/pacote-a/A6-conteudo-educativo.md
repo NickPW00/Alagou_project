@@ -31,4 +31,31 @@ Fora do escopo: gerenciador de conteúdo com edição pelo painel (Fase 6, com b
 4. Acessibilidade e matriz de telas continuam passando.
 
 ## 3. Como foi
-*(preenchido ao concluir o item)*
+
+**Status:** implementado e testado (versão 0.9.0). O conteúdo continua **aguardando revisão da equipe**.
+
+### 3.1 Entregue
+- `src/content/aprenda.ts`: textos dos módulos 1 a 5:
+  - causas dos alagamentos, incluindo a geografia da Baixada e a justiça climática;
+  - alagamento, enchente, inundação, enxurrada, precipitação, nível da água e bacia hidrográfica;
+  - segurança antes, durante e depois, com eletricidade, contaminação e grupos vulneráveis;
+  - soluções baseadas na natureza;
+  - ciência cidadã.
+- Página com módulos expansíveis acessíveis, selo **"Rascunho em revisão pela equipe Meninas pelo Clima"**, quiz de 4 perguntas com explicação e placar, e links institucionais (Cemaden, Defesa Civil RJ) para conferência.
+
+### 3.2 Desvios
+Nenhum.
+
+### 3.3 Resultados
+- **Teste-guarda do conteúdo** (`src/content/aprenda.test.ts`):
+  - toda frase que fala em entrar ou atravessar ruas ou água contém "não" ou "nunca";
+  - nenhuma referência bibliográfica;
+  - 199/193 presentes;
+  - respostas do quiz válidas.
+- Ponta a ponta (`e2e/learn.spec.ts`): módulos abrem por clique e por teclado; quiz com acerto, erro, explicação, placar e "Refazer"; sem violações de acessibilidade.
+- Suíte completa: unitários **59/59**; ponta a ponta **104 passaram**, 31 ignorados (por desenho), **0 falhas**.
+
+### 3.4 Pendências (para a equipe)
+- Revisar todos os textos, especialmente as definições do módulo 2, conferindo nos materiais do Cemaden e da Defesa Civil.
+- Definir a lista de referências científicas.
+- Ilustrações, vídeos e materiais para download (Fase 6).

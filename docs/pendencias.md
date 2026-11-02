@@ -6,6 +6,8 @@
 - [ ] Logomarca do LabPENSo, se houver
 - [ ] Decisões 3 a 6 do documento da Fase 1 (login, menores, contas de serviço, parâmetros científicos)
 
+- [ ] Revisar os textos do Aprenda e Previna (A6) e definir as referências científicas
+
 ## Técnicas
 - [x] Sobreposição do menu sobre o nome Alag@u (corrigido no A1, 0.3.0)
 - [x] Mapa muito baixo em celular deitado e em 320 px (corrigido no A1, 0.3.0)
