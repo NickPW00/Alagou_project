@@ -11,6 +11,14 @@ Uma iniciativa do projeto Meninas pelo Clima — LabPENSo/UERJ.
 
 **Demonstração online:** https://nickpw00.github.io/Alagou_project/ (dados fictícios; publicada automaticamente a cada push — ver [guia](docs/publicacao.md)).
 
+<p align="center">
+  <a href="https://nickpw00.github.io/Alagou_project/">
+    <img src="docs/qrcode-site.svg" width="200" alt="QR code para abrir a demonstração do Alag@u: https://nickpw00.github.io/Alagou_project/">
+  </a>
+  <br>
+  <sub>Aponte a câmera do celular para abrir a demonstração. Versão para impressão: <a href="docs/qrcode-site.png">docs/qrcode-site.png</a></sub>
+</p>
+
 Documentos:
 - [Diagnóstico e arquitetura](docs/00-fase-0-1-diagnostico-e-arquitetura.md)
 - [Fase 2 — estrutura visual e testes](docs/01-fase-2-estrutura-visual.md)
