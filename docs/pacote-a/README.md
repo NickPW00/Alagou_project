@@ -15,7 +15,7 @@ Autorizado pela coordenação em 02/11/2026. Decisões tomadas:
 | A5 Trecho da rua | [A5-trecho-da-rua.md](A5-trecho-da-rua.md) | **implementado e testado** (0.8.0) |
 | A6 Conteúdo de segurança e educativo | [A6-conteudo-educativo.md](A6-conteudo-educativo.md) | **implementado e testado** (0.9.0) — texto aguardando revisão da equipe |
 | A7 INMET + previsão Open-Meteo | [A7-alertas-previsao.md](A7-alertas-previsao.md) | **implementado e testado** (0.10.0) — avisos do INMET + previsão |
-| A8 Política de Privacidade e Termos (rascunhos) | — | planejado |
+| A8 Política de Privacidade e Termos (rascunhos) | [A8-privacidade-termos.md](A8-privacidade-termos.md) | em desenvolvimento |
 | A9 Link direto para um relato | — | planejado |
 | E1 Logomarcas institucionais e cores da marca (extra, pedido em 02/11) | [E1-identidade-institucional.md](E1-identidade-institucional.md) | **implementado e testado** (0.6.0) |
 
