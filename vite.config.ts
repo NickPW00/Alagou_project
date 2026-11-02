@@ -49,6 +49,12 @@ export default defineConfig({
             options: { cacheName: 'alagou-codigo', expiration: { maxEntries: 60, maxAgeSeconds: 30 * DAY } },
           },
           {
+            // A4: limites, índice de ruas e bairros (usados também offline).
+            urlPattern: ({ sameOrigin, url }) => sameOrigin && url.pathname.includes('/geo/'),
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'alagou-dados-geo', expiration: { maxEntries: 20, maxAgeSeconds: 30 * DAY } },
+          },
+          {
             urlPattern: /^https:\/\/tiles\.openfreemap\.org\/styles\//,
             handler: 'StaleWhileRevalidate',
             options: { cacheName: 'alagou-mapa-estilo', cacheableResponse: { statuses: [0, 200] } },

@@ -1,7 +1,10 @@
 import { expect, test } from '@playwright/test';
-import { openMapFilters, stubMap } from './helpers';
+import { openMapFilters, stubGeo, stubMap } from './helpers';
 
-test.beforeEach(async ({ page }) => stubMap(page));
+test.beforeEach(async ({ page }) => {
+  await stubMap(page);
+  await stubGeo(page); // limites SINTÉTICOS: determinístico
+});
 
 test('fluxo completo de aviso em 8 etapas aparece no mapa', async ({ page }) => {
   await page.goto('/avisar');
@@ -12,7 +15,6 @@ test('fluxo completo de aviso em 8 etapas aparece no mapa', async ({ page }) => 
   await expect(page.getByText('Escolha o distrito.')).toBeVisible();
   await expect(page.getByText('Marque o local no mapa ou use sua localização.')).toBeVisible();
 
-  await page.getByLabel('Distrito *').selectOption('Campos Elíseos');
   await page.getByLabel('Bairro *').fill('Bairro Teste E2E');
   await page.getByLabel('Nome da rua ou avenida *').fill('Rua Teste E2E');
   await page.getByLabel('Ponto de referência').fill('Perto da praça');
@@ -21,6 +23,10 @@ test('fluxo completo de aviso em 8 etapas aparece no mapa', async ({ page }) => 
   await map.scrollIntoViewIfNeeded();
   await map.click({ position: { x: 120, y: 100 } });
   await expect(page.getByText('Ponto marcado no mapa.')).toBeVisible();
+  // A4: o distrito é detectado pelo limite; a pessoa pode corrigir.
+  await expect(page.getByText(/Distrito identificado pelo limite/)).toBeVisible();
+  await expect(page.getByLabel('Distrito *')).not.toHaveValue('');
+  await page.getByLabel('Distrito *').selectOption('Campos Elíseos');
   await page.getByRole('button', { name: 'Continuar' }).click();
 
   // Etapa 2

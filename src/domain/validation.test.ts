@@ -29,6 +29,10 @@ describe('validação do formulário', () => {
     const e = validateStep('where', { ...base, district: undefined, neighborhood: ' ', street: '', location: undefined }, now);
     expect(Object.keys(e).sort()).toEqual(['district', 'location', 'neighborhood', 'street']);
   });
+  it('bloqueia ponto fora do município quando os limites estão disponíveis (A4)', () => {
+    expect(validateStep('where', base, now, { outsideMunicipality: true }).location).toMatch(/fora do município/);
+    expect(validateStep('where', base, now, { outsideMunicipality: false }).location).toBeUndefined();
+  });
   it('valida CEP opcional', () => {
     expect(validateStep('where', { ...base, postalCode: '123' }, now).postalCode).toBeDefined();
     expect(validateStep('where', { ...base, postalCode: '25000-000' }, now).postalCode).toBeUndefined();

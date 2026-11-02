@@ -1,6 +1,7 @@
-import { Layers, List, Map as MapIcon, Search, SlidersHorizontal } from 'lucide-react';
+import { Layers, List, Map as MapIcon, SlidersHorizontal } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import AddressSearch from '../components/AddressSearch';
 import Legend from '../components/Legend';
 import MapView from '../components/LazyMap';
 import ReportDetail, { ReportSummary } from '../components/ReportDetail';
@@ -9,7 +10,7 @@ import { useHistorical, useReports } from '../data';
 import { filterReports, type ReportFilter } from '../domain/filters';
 import { FREQUENCY_LABELS } from '../domain/labels';
 import { formatBrasilia } from '../domain/time';
-import { DISTRICTS, type District, type PublicReport } from '../domain/types';
+import { DISTRICTS, type District, type LngLat, type PublicReport } from '../domain/types';
 
 function DistrictSelect({ value, onChange, className = '' }: { value: District | ''; onChange: (d: District | '') => void; className?: string }) {
   return (
@@ -63,6 +64,7 @@ export default function LiveMap() {
   const [selectedHist, setSelectedHist] = useState<string | null>(null);
   const [legendOpen, setLegendOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [jumpTo, setJumpTo] = useState<LngLat | null>(null);
 
   const visible = useMemo(() => filterReports(reports, filter), [reports, filter]);
   const showHistorical = filter.period === 'history';
@@ -82,17 +84,23 @@ export default function LiveMap() {
       {/* Barra de filtros. Em telas ≤ 479 px e em celular deitado, os filtros ficam atrás do botão "Filtros". */}
       <div className="z-30 space-y-2 bg-white/95 p-2 shadow lg:p-3 short:space-y-1 short:p-1.5">
         <div className="flex gap-2">
-          <label className="relative min-w-0 flex-1">
-            <span className="sr-only">Pesquisar rua ou bairro</span>
-            <Search size={18} aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-            <input
-              type="search"
-              value={filter.query}
-              onChange={(e) => setFilter({ ...filter, query: e.target.value })}
+          <div className="min-w-0 flex-1">
+            <AddressSearch
+              label="Pesquisar rua ou bairro"
+              hideLabel
               placeholder="Pesquisar rua ou bairro"
-              className="h-11 w-full rounded-full border border-gray-300 pl-10 pr-3"
+              value={filter.query}
+              onChange={(q) => setFilter({ ...filter, query: q })}
+              onSelect={(r) => {
+                // Leva o mapa até a rua/bairro escolhido e mostra todos os relatos da região.
+                setFilter({ ...filter, query: '' });
+                setSelected(null);
+                setView('map');
+                setJumpTo({ ...r.location });
+              }}
+              inputClassName="h-11 w-full rounded-full border border-gray-300 bg-white pl-10 pr-3"
             />
-          </label>
+          </div>
           <DistrictSelect className="hidden min-[480px]:block short:hidden" value={filter.district} onChange={(d) => setFilter({ ...filter, district: d })} />
           <button
             type="button"
@@ -160,7 +168,7 @@ export default function LiveMap() {
                 setSelected(null);
                 setSelectedHist(id);
               }}
-              focus={report?.location ?? null}
+              focus={report?.location ?? jumpTo}
               onStatus={setMapStatus}
             />
           </div>

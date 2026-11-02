@@ -19,7 +19,7 @@ test('mapa carrega, filtra e abre detalhes pela lista', async ({ page }) => {
   await expect(page.getByRole('heading', { name: '1 relato(s)' })).toBeVisible();
   await districtSelect(page).selectOption('');
 
-  await page.getByRole('searchbox', { name: 'Pesquisar rua ou bairro' }).fill('demonstracao d6');
+  await page.getByRole('combobox', { name: 'Pesquisar rua ou bairro' }).fill('demonstracao d6');
   await expect(page.getByRole('heading', { name: '1 relato(s)' })).toBeVisible();
   await page.getByRole('button', { name: /Rua Demonstração D6/ }).click();
   const detail = page.getByRole('dialog', { name: /Rua Demonstração D6/ });
@@ -29,7 +29,7 @@ test('mapa carrega, filtra e abre detalhes pela lista', async ({ page }) => {
   await detail.getByRole('button', { name: 'Ver histórico' }).click();
   await expect(detail.getByText(/Atualização: água baixando/)).toBeVisible();
 
-  await page.getByRole('searchbox').fill('nada-encontrado');
+  await page.getByRole('combobox', { name: 'Pesquisar rua ou bairro' }).fill('nada-encontrado');
   await page.getByRole('button', { name: 'Fechar detalhes' }).click();
   await expect(page.getByText('Nenhum relato para este filtro.')).toBeVisible();
 });

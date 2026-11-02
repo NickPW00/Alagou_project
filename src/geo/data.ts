@@ -41,6 +41,11 @@ export function locate(limites: Limites | null, p: LngLat): Locate {
   return { inside, district: inside ? toDistrict(districtAt(limites, pt)) : null };
 }
 
+/** Texto da fonte dos limites, para não chamar de "oficial do IBGE" o que veio do OpenStreetMap. */
+export function limitesFonteLabel(limites: Limites | null): string {
+  return limites && municipioOf(limites).properties.fonte === 'IBGE' ? 'limite oficial do IBGE' : 'limite do OpenStreetMap';
+}
+
 /** Apenas para testes: limpa o cache em memória. */
 export function _resetGeoCache() {
   cache.clear();

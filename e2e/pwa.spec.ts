@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { stubGeo, stubGeocoder } from './helpers';
 
 // A3: roda contra a versão de produção (vite build + preview), onde existe o service worker.
 
@@ -43,7 +44,7 @@ test('funciona offline depois da primeira visita', async ({ page, context }) => 
 
   // Abre o mapa online uma vez, para o código do mapa ser guardado no primeiro uso.
   await page.goto('/mapa');
-  await expect(page.getByRole('searchbox', { name: 'Pesquisar rua ou bairro' })).toBeVisible();
+  await expect(page.getByRole('combobox', { name: 'Pesquisar rua ou bairro' })).toBeVisible();
 
   await context.setOffline(true);
   await page.goto('/');
@@ -54,8 +55,30 @@ test('funciona offline depois da primeira visita', async ({ page, context }) => 
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Onde aconteceu?');
 
   await page.goto('/mapa');
-  await expect(page.getByRole('searchbox', { name: 'Pesquisar rua ou bairro' })).toBeVisible();
+  await expect(page.getByRole('combobox', { name: 'Pesquisar rua ou bairro' })).toBeVisible();
 
   await context.setOffline(false);
   await expect(page.getByText('Sem internet — mostrando informações salvas neste aparelho.')).toBeHidden();
+});
+
+test('A4: busca de ruas funciona offline depois do primeiro uso', async ({ page, context }) => {
+  await context.route(/openfreemap\.org/, (r) => r.abort());
+  await stubGeo(context);
+  await stubGeocoder(context, []);
+  await page.goto('/');
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
+  await page.reload();
+  await expect.poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller))).toBe(true);
+  await page.goto('/avisar');
+  const box = page.getByRole('combobox', { name: 'Buscar rua, bairro ou lugar' });
+  await box.fill('flores');
+  await expect(page.getByRole('option', { name: /Rua das Flores/ }).first()).toBeVisible();
+
+  await context.setOffline(true);
+  await page.reload();
+  await page.getByRole('combobox', { name: 'Buscar rua, bairro ou lugar' }).fill('exemplo');
+  await expect(page.getByRole('option', { name: /Avenida Exemplo Central/ })).toBeVisible();
+  await expect(page.getByText('Sem internet: buscando só nas ruas salvas no aparelho.')).toBeVisible();
 });

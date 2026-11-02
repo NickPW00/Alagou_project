@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { INITIAL_VIEW, MAP_STYLE_URL } from '../config/settings';
 import { CONDITION_INFO, OUTDATED_COLOR } from '../domain/labels';
 import { freshnessOf } from '../domain/time';
+import { loadLimites } from '../geo/data';
 import type { HistoricalReport, LngLat, PublicReport, StreetCondition, WaterTrend } from '../domain/types';
 
 // O Vite não detecta a URL dinâmica do worker do MapLibre; informamos explicitamente.
@@ -306,6 +307,32 @@ export default function MapView({
           'icon-offset': ['case', ['has', 'point_count'], ['literal', [0, 32]], ['literal', [0, 23]]],
           'icon-allow-overlap': true,
         },
+      });
+
+      // A4: limites oficiais do IBGE (município e distritos), abaixo dos relatos.
+      void loadLimites().then((limites) => {
+        if (!limites || mapRef.current !== map) return;
+        map.addSource('limites', { type: 'geojson', data: limites as unknown as GeoJSON.FeatureCollection });
+        map.addLayer(
+          {
+            id: 'limite-distritos',
+            type: 'line',
+            source: 'limites',
+            filter: ['==', ['get', 'tipo'], 'distrito'],
+            paint: { 'line-color': '#062C58', 'line-width': 1.5, 'line-opacity': 0.55, 'line-dasharray': [3, 2] },
+          },
+          'historical-points',
+        );
+        map.addLayer(
+          {
+            id: 'limite-municipio',
+            type: 'line',
+            source: 'limites',
+            filter: ['==', ['get', 'tipo'], 'municipio'],
+            paint: { 'line-color': '#062C58', 'line-width': 2.5, 'line-opacity': 0.7 },
+          },
+          'historical-points',
+        );
       });
 
       map.on('click', 'report-points', (e) => {

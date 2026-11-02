@@ -68,4 +68,51 @@ Assim os dados ficam auditáveis e reproduzíveis, e o app não depende do IBGE 
 7. A suíte, a matriz de telas e a acessibilidade continuam passando.
 
 ## 3. Como foi
-*(preenchido ao concluir o item)*
+
+**Status:** implementado e testado (versão 0.7.0), com uma pendência de dados: os limites oficiais do IBGE (ver 3.2).
+
+### 3.1 Entregue
+- **Pipeline de dados** (`scripts/geo/build.mjs` + `src/geo/pipeline.ts`) e o **robô** `dados-geograficos.yml` (sob demanda), que gravam `public/geo/` com `fontes.json` (URLs, data e licença).
+- **Dados reais gerados** (02/11/2026):
+  - 4 distritos e o contorno do município;
+  - **4.155** entradas no índice de ruas (57 kB comprimido);
+  - **73** nomes de bairro do OSM.
+- **Distrito automático** pelo ponto marcado (mapa, GPS ou busca), com o texto indicando a fonte do limite.
+- **Ponto fora do município** bloqueia a etapa, com mensagem clara.
+- **Busca com sugestões** (`AddressSearch`, padrão *combobox* acessível, com teclado e leitor de tela):
+  - índice local de ruas e bairros, que funciona offline;
+  - Photon com espera de 400 ms, cancelamento e restrição ao município;
+  - homônimas separadas por distrito;
+  - "não encontrado" com orientação;
+  - remoção do número de porta na busca local.
+- **Sugestões de bairro** no campo Bairro (nomes do OSM, filtrados pelo distrito).
+- **Limites desenhados** no Mapa ao Vivo e no mapa do formulário: município em linha contínua, distritos tracejados.
+- **Mapa ao Vivo:** a busca sugere ruas e bairros e leva o mapa até eles.
+- **Sobre:** créditos com a fonte real dos limites, lida de `public/geo`.
+
+### 3.2 Desvios e problemas encontrados
+| Situação | O que foi feito |
+|---|---|
+| **A API do IBGE recusou as conexões do GitHub Actions** (3 tentativas com tempo esgotado em `servicodados.ibge.gov.br:443`; a API costuma bloquear acessos de fora do Brasil). | O robô passou a **tentar o IBGE e, se falhar, usar as relações administrativas do OpenStreetMap** (município com o código IBGE 3301702 e os 4 distritos), registrando em `fontes.json` (`oficial_ibge: false`) que **não é a malha oficial**. O app mostra "limite do OpenStreetMap" em vez de "oficial do IBGE". **Pendente:** gerar com o IBGE a partir de um computador no Brasil (comando abaixo). |
+| O OSM grafa um distrito como **"Campos Elyseos"**. | Padronização para os 4 nomes oficiais, guardando o nome original (`nome_original`). |
+| A revisão visual pegou o texto "limite oficial do IBGE" aplicado a dados do OSM. | Texto passou a depender da fonte. |
+| O teste do fluxo completo escolhia o distrito antes de marcar o ponto; com o distrito automático, o clique passou a trocar o distrito (comportamento correto). | Teste ajustado: marca o ponto, verifica o distrito detectado e depois a pessoa corrige; usa limites sintéticos para ser determinístico. |
+
+**Para gerar os limites oficiais do IBGE** (num computador no Brasil, com Node 22.18 ou mais novo):
+```bash
+node scripts/geo/build.mjs --source ibge
+```
+Depois, faça o commit de `public/geo/` e envie para o GitHub. O app passa a exibir "limite oficial do IBGE" automaticamente.
+
+### 3.3 Resultados
+- **Validação dos dados reais:** o Centro de Duque de Caxias, Xerém, Imbariê e Campos Elíseos caem nos distritos corretos, e o centro do Rio de Janeiro fica fora do município.
+- Unitários: geometria (incluindo buracos e multipolígonos), processamento (IBGE e OSM), índice (homônimas, vias sem nome ou fora), busca, distrito automático e Photon simulado (área do município enviada, resultado de fora descartado).
+- Ponta a ponta (`e2e/address.spec.ts`, celular e desktop): homônimas por distrito; preenchimento de rua, distrito e ponto; Photon com teclado; "não encontrado"; GPS fora bloqueia e GPS dentro preenche o distrito; busca do Mapa ao Vivo.
+- Projeto `pwa`: busca de ruas **offline** depois do primeiro uso.
+- Os testes de ponta a ponta usam **dados sintéticos** (`e2e/fixtures/geo`), para serem determinísticos.
+- Suíte completa: **unitários 54/54**; ponta a ponta **94 passaram**, 31 ignorados (por desenho), **0 falhas**.
+
+### 3.4 Pendências
+- Limites oficiais do IBGE (comando acima).
+- Base oficial de bairros (Prefeitura ou Censo 2022): continua pendente; os nomes do OSM são só sugestões.
+- Photon público: avaliar uma instância própria se o uso crescer.

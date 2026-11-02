@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, type Page } from '@playwright/test';
+import { expect, type BrowserContext, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 
 /** Estilo mínimo de mapa: isola os testes do serviço externo de tiles. */
 export const STUB_STYLE = {
@@ -37,10 +38,22 @@ export async function expectNoHorizontalScroll(page: Page) {
 
 /** Em telas estreitas os filtros do mapa ficam atrás do botão "Filtros". */
 export async function openMapFilters(page: Page) {
-  await page.getByRole('searchbox', { name: 'Pesquisar rua ou bairro' }).waitFor();
+  await page.getByRole('combobox', { name: 'Pesquisar rua ou bairro' }).waitFor();
   const btn = page.getByRole('button', { name: /^Filtros/ });
   if (await btn.isVisible() && (await btn.getAttribute('aria-expanded')) !== 'true') await btn.click();
 }
 
 /** Seletor de distrito visível (há um na barra e outro no painel de filtros). */
 export const districtSelect = (page: Page) => page.getByLabel('Filtrar por distrito').filter({ visible: true });
+
+/** A4: dados geográficos SINTÉTICOS (e2e/fixtures/geo, gerados de scripts/geo/fixture). */
+export async function stubGeo(target: Page | BrowserContext) {
+  for (const f of ['limites.geojson', 'ruas-indice.json', 'bairros-osm.json']) {
+    await target.route(new RegExp(`/geo/${f.replace('.', '\\.')}$`), (r) => r.fulfill({ contentType: 'application/json', body: readFileSync(`e2e/fixtures/geo/${f}`, 'utf8') }));
+  }
+}
+
+/** A4: respostas simuladas do Photon. */
+export async function stubGeocoder(target: Page | BrowserContext, features: unknown[] = []) {
+  await target.route(/photon\.komoot\.io/, (r) => r.fulfill({ json: { type: 'FeatureCollection', features } }));
+}

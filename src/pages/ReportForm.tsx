@@ -1,10 +1,13 @@
 import { Crosshair, Info, Save } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import AddressSearch from '../components/AddressSearch';
 import MapView from '../components/LazyMap';
 import { ConditionSwatch, SafetyBox } from '../components/ui';
 import { dataSource, isDemo } from '../data';
 import { clearDraft, isOldDraft, loadDraft, saveDraft, type StoredDraft } from '../data/draftStore';
+import { limitesFonteLabel, loadLimites, loadPlaces, locate, toDistrict } from '../geo/data';
+import type { Limites, PlaceEntry } from '../geo/pipeline';
 import type { SubmitResult } from '../data/source';
 import { CONDITION_INFO, DEPTH_LABELS, HAZARD_LABELS, TREND_INFO } from '../domain/labels';
 import { brasiliaToUtcIso, formatBrasilia, nowInBrasilia } from '../domain/time';
@@ -15,6 +18,7 @@ import {
   STREET_CONDITIONS,
   WATER_TRENDS,
   type District,
+  type LngLat,
   type ReportDraft,
 } from '../domain/types';
 import { STEPS, isHistorical, validateAll, validateStep, type Errors } from '../domain/validation';
@@ -99,6 +103,13 @@ export default function ReportForm() {
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState<Errors>({});
   const [geoMsg, setGeoMsg] = useState<string | null>(null);
+  // A4: limites oficiais (IBGE) e nomes de bairro (OSM), carregados sob demanda.
+  const [limites, setLimites] = useState<Limites | null>(null);
+  const [places, setPlaces] = useState<PlaceEntry[]>([]);
+  useEffect(() => {
+    void loadLimites().then(setLimites);
+    void loadPlaces().then(setPlaces);
+  }, []);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<SubmitResult | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -132,6 +143,13 @@ export default function ReportForm() {
   }, []);
 
   const current = STEPS[step];
+  const located = draft.location ? locate(limites, draft.location) : null;
+  const vctx = { outsideMunicipality: located?.inside === false };
+  /** Define o ponto e, se os limites estiverem disponíveis, o distrito correspondente. */
+  const setLocation = (p: LngLat, method: NonNullable<ReportDraft['locationMethod']>, extra: Partial<ReportDraft> = {}) => {
+    const { district } = locate(limites, p);
+    setDraft((d) => ({ ...d, ...extra, location: p, locationMethod: method, ...(district ? { district } : {}) }));
+  };
   const set = <K extends keyof ReportDraft>(k: K, v: ReportDraft[K]) => setDraft((d) => ({ ...d, [k]: v }));
 
   // Move o foco para o título ao trocar de etapa (leitores de tela), mas não ao abrir a página.
@@ -145,7 +163,7 @@ export default function ReportForm() {
   }, [step, result]);
 
   const next = () => {
-    const e = validateStep(current.id, draft);
+    const e = validateStep(current.id, draft, new Date(), vctx);
     setErrors(e);
     if (Object.keys(e).length === 0) setStep((s) => Math.min(s + 1, STEPS.length - 1));
   };
@@ -162,7 +180,7 @@ export default function ReportForm() {
     setGeoMsg('Obtendo localização…');
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setDraft((d) => ({ ...d, location: { lng: pos.coords.longitude, lat: pos.coords.latitude }, locationMethod: 'gps' }));
+        setLocation({ lng: pos.coords.longitude, lat: pos.coords.latitude }, 'gps');
         setGeoMsg('Localização obtida. Confira o ponto no mapa e arraste se necessário.');
       },
       () => setGeoMsg('Não foi possível obter sua localização (permissão negada ou GPS desativado). Marque o ponto no mapa.'),
@@ -171,7 +189,7 @@ export default function ReportForm() {
   };
 
   const submit = async () => {
-    const e = validateAll(draft);
+    const e = validateAll(draft, new Date(), vctx);
     setErrors(e);
     if (Object.keys(e).length) {
       setSubmitError('Há informações faltando. Volte às etapas indicadas.');
@@ -320,6 +338,20 @@ export default function ReportForm() {
           <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:space-y-0">
             <div className="space-y-4">
             <p className="text-sm text-muted">Informe o local do alagamento — não precisa ser onde você mora.</p>
+            <AddressSearch
+              label="Buscar rua, bairro ou lugar"
+              placeholder="Ex.: nome da rua, praça, escola…"
+              geocoder
+              onSelect={(r) => {
+                const district = toDistrict(r.district);
+                setLocation(r.location, 'search', {
+                  ...(r.street ? { street: r.street } : {}),
+                  ...(district ? { district } : {}),
+                  ...(r.kind === 'place' && !draft.neighborhood ? { neighborhood: r.label } : {}),
+                });
+                setGeoMsg('Confira se o marcador está no trecho certo e arraste se precisar.');
+              }}
+            />
             <Field id="district" label="Distrito *" error={errors.district}>
               <select id="district" className={input} value={draft.district ?? ''} onChange={(e) => set('district', (e.target.value || undefined) as District | undefined)} aria-invalid={!!errors.district}>
                 <option value="">Escolha…</option>
@@ -329,7 +361,14 @@ export default function ReportForm() {
               </select>
             </Field>
             <Field id="neighborhood" label="Bairro *" error={errors.neighborhood}>
-              <input id="neighborhood" className={input} value={draft.neighborhood} onChange={(e) => set('neighborhood', e.target.value)} aria-invalid={!!errors.neighborhood} autoComplete="off" />
+              <input id="neighborhood" list="bairros-sugeridos" className={input} value={draft.neighborhood} onChange={(e) => set('neighborhood', e.target.value)} aria-invalid={!!errors.neighborhood} autoComplete="off" />
+              <datalist id="bairros-sugeridos">
+                {places
+                  .filter((pl) => !draft.district || toDistrict(pl.d) === draft.district)
+                  .map((pl) => (
+                    <option key={`${pl.n}|${pl.d}`} value={pl.n} />
+                  ))}
+              </datalist>
             </Field>
             <Field id="street" label="Nome da rua ou avenida *" error={errors.street} hint="A busca de endereços com sugestões será adicionada na Fase 3.">
               <input id="street" className={input} value={draft.street} onChange={(e) => set('street', e.target.value)} aria-invalid={!!errors.street} autoComplete="off" />
@@ -365,11 +404,24 @@ export default function ReportForm() {
               <MapView
                 className="h-72 overflow-hidden rounded-2xl ring-1 ring-black/10 lg:h-[28rem]"
                 label="Mapa para marcar o local do alagamento"
-                pick={{ value: draft.location, onPick: (p) => setDraft((d) => ({ ...d, location: p, locationMethod: 'map_pin' })) }}
-                focus={draft.locationMethod === 'gps' ? draft.location : null}
+                pick={{ value: draft.location, onPick: (p) => setLocation(p, 'map_pin') }}
+                focus={draft.locationMethod === 'gps' || draft.locationMethod === 'search' ? draft.location : null}
               />
               {draft.location ? (
-                <p className="mt-1 text-sm font-semibold text-[#1B5E20]">Ponto marcado no mapa.</p>
+                <>
+                  <p className="mt-1 text-sm font-semibold text-[#1B5E20]">Ponto marcado no mapa.</p>
+                  {located?.inside === false ? (
+                    <p role="alert" className="mt-1 text-sm font-semibold text-severe">
+                      {errors.location ?? 'O ponto marcado está fora do município de Duque de Caxias. Confira a posição no mapa.'}
+                    </p>
+                  ) : (
+                    located?.district && (
+                      <p className="mt-1 text-sm text-muted">
+                        Distrito identificado pelo {limitesFonteLabel(limites)}: {located.district}.
+                      </p>
+                    )
+                  )}
+                </>
               ) : (
                 errors.location && <p className="mt-1 text-sm font-semibold text-severe">{errors.location}</p>
               )}

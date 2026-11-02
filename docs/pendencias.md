@@ -12,6 +12,7 @@
 - [ ] Incluir zoom de texto 200% na matriz automática
 - [x] Fundo de mapa OpenFreeMap verificado no site publicado (02/11/2026)
 - [ ] Conferir os links oficiais da tela de Alertas (INMET alertas2, mapa interativo do Cemaden, Defesa Civil RJ, Prefeitura de Duque de Caxias)
-- [ ] Importar os limites oficiais do IBGE (município 3301702 e distritos) por script versionado (Fase 3; a API do IBGE não está acessível no ambiente atual)
+- [x] Pipeline de limites e ruas (A4, 0.7.0)
+- [ ] **Gerar os limites oficiais do IBGE** num computador no Brasil: `node scripts/geo/build.mjs --source ibge` (hoje: OpenStreetMap)
 - [ ] Pesquisar uma base oficial de bairros (Censo 2022 / Prefeitura)
 - [ ] Testes em aparelhos Android e iPhone reais (Fase 7)

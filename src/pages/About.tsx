@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import { Logo } from '../components/Institutional';
+import { loadLimites } from '../geo/data';
 import { Card, Disclaimer, PageHeader, SafetyBox } from '../components/ui';
 import { INSTITUTIONAL_LINKS } from '../config/settings';
 import { CONDITION_INFO } from '../domain/labels';
@@ -6,6 +8,10 @@ import { FRESHNESS } from '../config/settings';
 import { STREET_CONDITIONS } from '../domain/types';
 
 export default function About() {
+  const [fonteLimites, setFonteLimites] = useState<string | null>(null);
+  useEffect(() => {
+    void loadLimites().then((l) => setFonteLimites(l ? (l.features[0]?.properties.fonte ?? null) : null));
+  }, []);
   return (
     <div className="space-y-5">
       <PageHeader title="Sobre o Alag@u" subtitle="Alagou? Avisou! — Monitoramento Comunitário de Alagamentos" />
@@ -53,6 +59,15 @@ export default function About() {
             (licença ODbL), servidos por OpenFreeMap.
           </li>
           <li>Visualização do mapa: MapLibre GL JS (código aberto, licença BSD).</li>
+          <li>
+            Limites do município e dos distritos:{' '}
+            {fonteLimites === 'IBGE'
+              ? 'IBGE — malha territorial oficial.'
+              : fonteLimites === 'OpenStreetMap'
+                ? 'OpenStreetMap (relações administrativas). A malha oficial do IBGE será usada assim que puder ser obtida.'
+                : 'não carregados.'}
+          </li>
+          <li>Busca de ruas e nomes de bairro: OpenStreetMap (nomes de bairro não são limites oficiais); outros lugares: Photon (komoot).</li>
           <li>O código do Alag@u é aberto e está publicado no GitHub.</li>
         </ul>
       </Card>

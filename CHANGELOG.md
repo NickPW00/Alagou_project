@@ -4,6 +4,13 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Versões: [SemVe
 
 ## [Não lançado]
 
+## [0.7.0] — 2026-11-02
+### Adicionado
+- A4: busca de ruas, bairros e lugares com sugestões (índice local do OpenStreetMap, offline, + Photon), distrito automático pelo limite, bloqueio de ponto fora do município, sugestões de bairro, limites desenhados nos mapas e "ir para" no Mapa ao Vivo.
+- A4: pipeline de dados geográficos (`scripts/geo`) e robô sob demanda (`dados-geograficos.yml`), com proveniência em `public/geo/fontes.json`.
+### Observação
+- A API do IBGE não aceitou conexões do GitHub Actions; os limites atuais vêm do OpenStreetMap (registrado em `fontes.json` e nos créditos). Gerar com `--source ibge` a partir do Brasil.
+
 ## [0.6.0] — 2026-11-02
 ### Adicionado
 - E1: logomarcas Meninas pelo Clima, UERJ e UERJ/FEBF no Início, no rodapé, no Sobre ("Realização"), no módulo 6 e no README; créditos de dados e tecnologia; guia de marca.

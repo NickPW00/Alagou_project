@@ -17,7 +17,10 @@ export const STEPS: { id: StepId; title: string }[] = [
 
 export type Errors = Partial<Record<string, string>>;
 
-export function validateStep(step: StepId, d: ReportDraft, now: Date = new Date()): Errors {
+/** Contexto opcional: resultado da checagem do ponto contra o limite oficial do município (A4). */
+export type ValidationContext = { outsideMunicipality?: boolean };
+
+export function validateStep(step: StepId, d: ReportDraft, now: Date = new Date(), ctx: ValidationContext = {}): Errors {
   const e: Errors = {};
   switch (step) {
     case 'where':
@@ -25,6 +28,7 @@ export function validateStep(step: StepId, d: ReportDraft, now: Date = new Date(
       if (!d.neighborhood.trim()) e.neighborhood = 'Informe o bairro.';
       if (!d.street.trim()) e.street = 'Informe o nome da rua ou avenida.';
       if (!d.location) e.location = 'Marque o local no mapa ou use sua localização.';
+      else if (ctx.outsideMunicipality) e.location = 'O ponto marcado está fora do município de Duque de Caxias. Confira a posição no mapa.';
       if (d.postalCode && !/^\d{5}-?\d{3}$/.test(d.postalCode.trim())) e.postalCode = 'CEP no formato 00000-000.';
       break;
     case 'condition':
@@ -49,8 +53,8 @@ export function validateStep(step: StepId, d: ReportDraft, now: Date = new Date(
   return e;
 }
 
-export function validateAll(d: ReportDraft, now: Date = new Date()): Errors {
-  return STEPS.reduce<Errors>((acc, s) => ({ ...acc, ...validateStep(s.id, d, now) }), {});
+export function validateAll(d: ReportDraft, now: Date = new Date(), ctx: ValidationContext = {}): Errors {
+  return STEPS.reduce<Errors>((acc, s) => ({ ...acc, ...validateStep(s.id, d, now, ctx) }), {});
 }
 
 export function isHistorical(observedIso: string, now: Date = new Date()): boolean {

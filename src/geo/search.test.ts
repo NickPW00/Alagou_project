@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { locate, toDistrict } from './data';
+import { limitesFonteLabel, locate, toDistrict } from './data';
 import { buildLimites, buildPlaces, buildStreetIndex } from './pipeline';
 import { searchGeocoder, searchLocal, stripNumber } from './search';
 
@@ -32,6 +32,9 @@ describe('distrito automático (A4)', () => {
     expect(locate(limites, { lng: -43.0, lat: -22.9 })).toEqual({ inside: false, district: null });
     expect(locate(null, { lng: -43.4, lat: -22.6 })).toEqual({ inside: null, district: null });
     expect(toDistrict('CAMPOS ELISEOS')).toBe('Campos Elíseos');
+    expect(toDistrict('Campos Elyseos')).toBe('Campos Elíseos');
+    expect(limitesFonteLabel(limites)).toBe('limite oficial do IBGE');
+    expect(limitesFonteLabel(null)).toBe('limite do OpenStreetMap');
   });
 });
 
