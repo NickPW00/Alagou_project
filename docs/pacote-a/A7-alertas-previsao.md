@@ -38,4 +38,56 @@ Fora do escopo: integrar avisos oficiais automaticamente, a menos que a verifica
 5. Acessibilidade e matriz de telas mantidas.
 
 ## 3. Como foi
-*(preenchido ao concluir o item)*
+
+**Status:** implementado e testado (versão 0.10.0).
+
+### 3.1 Resultado da verificação (02/11/2026, a partir do GitHub Actions — servidores fora do Brasil)
+Arquivo completo: [`docs/fontes/verificacao.json`](../fontes/verificacao.json).
+
+| Fonte | Endereço | Resultado | Conclusão |
+|---|---|---|---|
+| **INMET — avisos ativos (API JSON)** | `apiprevmet3.inmet.gov.br/avisos/ativos` | **200**, JSON, **CORS liberado** para o site do Alag@u; ~425 kB **sem compressão** | **Viável**: integrada (ver 3.2). Formato documentado na amostra. |
+| INMET — avisos (RSS) | `apiprevmet3.inmet.gov.br/avisos/rss` | 200, RSS; licença declarada: "reprodução permitida desde que citada a fonte" | Licença confirmada. Indica `avisos.inmet.gov.br` como página dos avisos. |
+| INMET — previsão por município | `apiprevmet3.inmet.gov.br/previsao/3301702` | 200, JSON (resumo por turno, temperatura, vento) | Disponível; não usada agora (sem chuva em mm por hora). Candidata para o futuro. |
+| INMET — portal de alertas | `alertas2.inmet.gov.br` | **conexão recusada** (ECONNRESET) | Link substituído por `avisos.inmet.gov.br` (indicado pelo próprio INMET no RSS). |
+| Cemaden — mapa interativo e serviço PED | `mapainterativo…`, `sws.cemaden.gov.br/PED` | **tempo esgotado** | Provável bloqueio a acessos de fora do Brasil (como o IBGE). **Repetir a verificação no Brasil.** O link segue no app. |
+| Cemaden — site institucional | `gov.br/cemaden` | 200 | OK |
+| Defesa Civil RJ | `defesacivil.rj.gov.br` | 200, sem API conhecida | Mantido como link; cadastro supervisionado quando houver banco. |
+| Prefeitura de Duque de Caxias | `duquedecaxias.rj.gov.br` | 200 | OK (link). |
+| **Open-Meteo** | `api.open-meteo.com` | **200**, JSON, CORS `*` | **Viável**: integrado. |
+
+### 3.2 Entregue
+- **Avisos oficiais do INMET** na tela de Alertas:
+  - somente os que incluem **Duque de Caxias** (código IBGE 3301702 na lista de municípios do aviso), não encerrados e ainda válidos;
+  - título, **severidade como emitida pelo INMET** e cor oficial;
+  - período (vigente ou previsto), riscos, orientações, código CAP, horário da consulta e link para o INMET;
+  - selo "Aviso oficial · INMET", com visual separado das atualizações comunitárias;
+  - sem avisos: "A ausência de aviso não significa ausência de risco".
+- **Início:** resumo dos avisos a partir da **cópia guardada** na última consulta (sem baixar ~425 kB a cada visita), com o horário da consulta.
+- **Previsão de chuva por distrito (Open-Meteo):**
+  - 24 h hora a hora (mm e %), com resumo (total, hora de mais chuva e maior chance);
+  - rótulo **"Previsão de modelo meteorológico — não é aviso oficial"**;
+  - fonte e licença CC BY 4.0;
+  - última previsão guardada para uso offline.
+- **Robô de verificação** (`verificar-fontes.yml` + `scripts/fontes/verificar.mjs`), reutilizável: pode ser rodado também num computador no Brasil.
+
+### 3.3 Desvios
+| Planejado (desenho do A7) | Feito | Motivo |
+|---|---|---|
+| Se o INMET fosse acessível, propor a integração para aprovação | **Integrado** | O plano aprovado pela coordenação (item A7: "se houver feed aberto, avisos com fonte, horário e link original") já autorizava a integração caso fosse viável, e a verificação mostrou que é. |
+| — | O link "INMET — Avisos" passou de `alertas2.inmet.gov.br` para `avisos.inmet.gov.br` | O primeiro recusou conexão. O segundo é o indicado pelo próprio INMET no RSS. Ainda precisa de confirmação por acesso (incluído no robô). |
+| Atualização por tarefa automática sem banco | Consulta direta pelo navegador | A API libera CORS. Uma tarefa agendada criaria commits a cada execução e atrasaria os avisos. |
+
+### 3.4 Resultados
+- Unitários: avisos (filtro por município sem confundir códigos parecidos, encerrados, vencidos, fuso de Brasília) e previsão (URL, fuso, próximas 24 h, resumo).
+- Ponta a ponta:
+  - avisos (só Duque de Caxias, campos, fonte, Início pela cópia guardada, INMET fora do ar, sem avisos);
+  - previsão (distritos, rótulo, fonte, horário, sem conexão com e sem cópia);
+  - acessibilidade (a tabela com rolagem lateral recebe foco pelo teclado; corrigido durante o item).
+- Suíte completa: unitários **65/65**; ponta a ponta **114 passaram**, 31 ignorados (por desenho), **0 falhas**.
+
+### 3.5 Pendências
+- Repetir a verificação **a partir do Brasil** (Cemaden e portal de alertas do INMET) com `node scripts/fontes/verificar.mjs`.
+- Confirmar o endereço de **detalhe** de cada aviso no INMET; hoje o link leva à página geral de avisos.
+- Peso da resposta do INMET (~425 kB sem compressão): avaliar um intermediário com filtro e compressão quando houver servidor (Fase 3).
+- Notificações de avisos oficiais: fase com banco, com autorização da pessoa.

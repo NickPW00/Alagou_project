@@ -4,6 +4,14 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Versões: [SemVe
 
 ## [Não lançado]
 
+## [0.10.0] — 2026-11-02
+### Adicionado
+- A7: avisos meteorológicos oficiais do INMET para Duque de Caxias (filtrados pelo código IBGE), com severidade, validade, orientações, código CAP, fonte e horário; resumo no Início pela última consulta.
+- A7: previsão de chuva por distrito (Open-Meteo), rotulada como "não é aviso oficial", com cópia para uso offline.
+- A7: robô de verificação de fontes meteorológicas e links oficiais (`docs/fontes/verificacao.json`).
+### Alterado
+- Link dos avisos do INMET para `avisos.inmet.gov.br` (o portal anterior recusou conexão na verificação).
+
 ## [0.9.0] — 2026-11-02
 ### Adicionado
 - A6: textos (rascunho em revisão) dos módulos 1–5 do Aprenda e Previna, guia de segurança antes/durante/depois e quiz de 4 perguntas; teste-guarda das regras do conteúdo.

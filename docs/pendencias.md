@@ -13,7 +13,8 @@
 - [x] Mapa muito baixo em celular deitado e em 320 px (corrigido no A1, 0.3.0)
 - [ ] Incluir zoom de texto 200% na matriz automática
 - [x] Fundo de mapa OpenFreeMap verificado no site publicado (02/11/2026)
-- [ ] Conferir os links oficiais da tela de Alertas (INMET alertas2, mapa interativo do Cemaden, Defesa Civil RJ, Prefeitura de Duque de Caxias)
+- [x] Links oficiais verificados pelo robô (A7) — ver docs/fontes/verificacao.json
+- [ ] Repetir a verificação de fontes **a partir do Brasil** (Cemaden e portal de alertas do INMET recusaram conexões do GitHub): `node scripts/fontes/verificar.mjs`
 - [x] Pipeline de limites e ruas (A4, 0.7.0)
 - [ ] **Gerar os limites oficiais do IBGE** num computador no Brasil: `node scripts/geo/build.mjs --source ibge` (hoje: OpenStreetMap)
 - [ ] Pesquisar uma base oficial de bairros (Censo 2022 / Prefeitura)

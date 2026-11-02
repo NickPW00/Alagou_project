@@ -13,6 +13,7 @@ const ALVOS = [
   { fonte: 'INMET', descricao: 'Previsão por município (API)', url: 'https://apiprevmet3.inmet.gov.br/previsao/3301702' },
   { fonte: 'INMET', descricao: 'Portal de alertas (link da tela de Alertas)', url: 'https://alertas2.inmet.gov.br/' },
   { fonte: 'INMET', descricao: 'Portal INMET', url: 'https://portal.inmet.gov.br/' },
+  { fonte: 'INMET', descricao: 'Página de avisos indicada no RSS do INMET (link do app)', url: 'https://avisos.inmet.gov.br' },
   { fonte: 'Cemaden', descricao: 'Mapa interativo (link da tela de Alertas)', url: 'https://mapainterativo.cemaden.gov.br/' },
   { fonte: 'Cemaden', descricao: 'Serviço de dados (PED)', url: 'https://sws.cemaden.gov.br/PED/' },
   { fonte: 'Cemaden', descricao: 'Site institucional (link do Aprenda)', url: 'https://www.gov.br/cemaden/pt-br' },

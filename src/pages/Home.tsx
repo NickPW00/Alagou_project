@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 import { ReportSummary } from '../components/ReportDetail';
 import { Card, EmptyState, ExampleTag, SafetyBox } from '../components/ui';
 import { isDemo, useHistorical, useReports } from '../data';
-import { freshnessOf, relativeTime } from '../domain/time';
+import { formatBrasilia, freshnessOf, relativeTime } from '../domain/time';
+import { loadCachedAlerts, stillValid } from '../weather/inmet';
 import { HISTORICAL_AFTER_HOURS } from '../config/settings';
 
 export default function Home() {
@@ -16,6 +17,9 @@ export default function Home() {
   const active = last24h.filter((r) => freshnessOf(r.observedAt, now) !== 'outdated' && r.condition !== 'no_flooding' && r.condition !== 'cannot_assess');
   const activeStreets = new Set(active.map((r) => `${r.street}|${r.neighborhood}`)).size;
   const monitored = new Set([...reports, ...historical].map((r) => `${r.street}|${r.neighborhood}`)).size;
+  // A7: só a cópia guardada (a consulta ao INMET acontece na tela de Alertas).
+  const officialCache = loadCachedAlerts();
+  const official = stillValid(officialCache);
   const latest = [...reports].sort((a, b) => b.submittedAt.localeCompare(a.submittedAt)).slice(0, 3);
 
   return (
@@ -88,10 +92,31 @@ export default function Home() {
 
       <section aria-labelledby="oficiais">
         <h2 id="oficiais" className="mb-2 text-lg font-bold text-navy">Avisos oficiais</h2>
-        <EmptyState title="Nenhum aviso oficial integrado ainda.">
-          A integração com fontes oficiais está prevista para a Fase 5.{' '}
-          <Link to="/alertas" className="font-semibold text-navy underline">Ver fontes oficiais</Link>
-        </EmptyState>
+        {officialCache ? (
+          official.length > 0 ? (
+            <ul className="space-y-2">
+              {official.map((a) => (
+                <li key={a.id} className="rounded-2xl border-l-8 bg-white p-3 shadow-sm ring-1 ring-black/5" style={{ borderLeftColor: a.color }}>
+                  <p className="text-xs font-bold uppercase text-navy">Aviso oficial · INMET</p>
+                  <p className="font-semibold">
+                    {a.title} — {a.severity}
+                  </p>
+                  <p className="text-sm text-muted">Até {formatBrasilia(a.endIso)}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <EmptyState title="Nenhum aviso do INMET vigente para Duque de Caxias na última consulta.">A ausência de aviso não significa ausência de risco.</EmptyState>
+          )
+        ) : (
+          <EmptyState title="Consulte os avisos oficiais na tela de Alertas.">Os avisos do INMET são mostrados com a fonte e o horário.</EmptyState>
+        )}
+        <p className="mt-1 text-xs text-muted">
+          {officialCache && <>Consultado em {formatBrasilia(officialCache.fetchedAt)}. </>}
+          <Link to="/alertas" className="font-semibold text-navy underline">
+            Ver alertas e previsão de chuva
+          </Link>
+        </p>
       </section>
 
       <SafetyBox />

@@ -1,12 +1,14 @@
-import { ExternalLink, Landmark, Users } from 'lucide-react';
-import { Card, EmptyState, PageHeader, SafetyBox, StatusPill } from '../components/ui';
+import { ExternalLink, Users } from 'lucide-react';
+import Forecast from '../components/Forecast';
+import OfficialAlerts from '../components/OfficialAlerts';
+import { Card, PageHeader, SafetyBox } from '../components/ui';
 
 // Links para canais oficiais. Devem ser revisados periodicamente (ver docs/pendencias.md).
 const SOURCES = [
   {
     name: 'INMET — Avisos meteorológicos',
     desc: 'Instituto Nacional de Meteorologia: avisos de chuvas intensas por área e severidade.',
-    url: 'https://alertas2.inmet.gov.br/',
+    url: 'https://avisos.inmet.gov.br',
   },
   {
     name: 'Cemaden — Mapa interativo',
@@ -30,15 +32,9 @@ export default function Alerts() {
     <div className="space-y-5">
       <PageHeader title="Vai chover? Fique ligado!" subtitle="Acompanhamento meteorológico para Duque de Caxias." />
 
-      <section aria-labelledby="oficial">
-        <h2 id="oficial" className="mb-2 flex items-center gap-2 text-lg font-bold text-navy">
-          <Landmark size={20} aria-hidden="true" /> Avisos oficiais <StatusPill status="planejado" />
-        </h2>
-        <EmptyState title="Nenhum aviso oficial integrado ainda.">
-          A integração automática com INMET e Cemaden depende de verificação técnica (API, licença, estabilidade) prevista para a Fase 5.
-          O Alag@u nunca cria avisos meteorológicos próprios.
-        </EmptyState>
-      </section>
+      <OfficialAlerts />
+
+      <Forecast />
 
       <section aria-labelledby="fontes">
         <h2 id="fontes" className="mb-2 text-lg font-bold text-navy">Consulte as fontes oficiais</h2>
