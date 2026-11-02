@@ -1,9 +1,10 @@
-import { Crosshair, Info } from 'lucide-react';
+import { Crosshair, Info, Save } from 'lucide-react';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import MapView from '../components/MapView';
+import MapView from '../components/LazyMap';
 import { ConditionSwatch, SafetyBox } from '../components/ui';
 import { dataSource, isDemo } from '../data';
+import { clearDraft, isOldDraft, loadDraft, saveDraft, type StoredDraft } from '../data/draftStore';
 import type { SubmitResult } from '../data/source';
 import { CONDITION_INFO, DEPTH_LABELS, HAZARD_LABELS, TREND_INFO } from '../domain/labels';
 import { brasiliaToUtcIso, formatBrasilia, nowInBrasilia } from '../domain/time';
@@ -101,7 +102,34 @@ export default function ReportForm() {
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<SubmitResult | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // A3: rascunho guardado neste aparelho. Nunca é restaurado sem a pessoa escolher.
+  const [pendingDraft, setPendingDraft] = useState<StoredDraft | null>(() => loadDraft());
+  const [savedAt, setSavedAt] = useState<string | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    if (pendingDraft || result) return;
+    const t = window.setTimeout(() => {
+      const stored = saveDraft(draft, step);
+      if (stored) setSavedAt(stored.savedAt);
+    }, 300);
+    return () => window.clearTimeout(t);
+  }, [draft, step, pendingDraft, result]);
+
+  // Grava imediatamente se a página for fechada, recarregada ou escondida antes do intervalo de 300 ms.
+  const latest = useRef({ draft, step, active: true });
+  latest.current = { draft, step, active: !pendingDraft && !result };
+  useEffect(() => {
+    const flush = () => latest.current.active && saveDraft(latest.current.draft, latest.current.step);
+    const onVisibility = () => document.visibilityState === 'hidden' && flush();
+    window.addEventListener('pagehide', flush);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      window.removeEventListener('pagehide', flush);
+      document.removeEventListener('visibilitychange', onVisibility);
+      flush(); // ao sair da tela do formulário
+    };
+  }, []);
 
   const current = STEPS[step];
   const set = <K extends keyof ReportDraft>(k: K, v: ReportDraft[K]) => setDraft((d) => ({ ...d, [k]: v }));
@@ -154,6 +182,8 @@ export default function ReportForm() {
     setSubmitError(null);
     try {
       setResult(await dataSource.submitReport(draft, iso));
+      clearDraft();
+      setSavedAt(null);
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Não foi possível enviar.');
     } finally {
@@ -194,6 +224,58 @@ export default function ReportForm() {
     );
   }
 
+  if (pendingDraft) {
+    const d = pendingDraft.draft;
+    const where = [d.street, d.neighborhood, d.district].filter(Boolean).join(', ');
+    return (
+      <div className="space-y-4">
+        <p className="text-sm font-semibold uppercase tracking-wide text-[#0E6F99]">Alagou? Conta pra gente!</p>
+        <h1 ref={headingRef} tabIndex={-1} className="text-2xl font-extrabold text-navy">
+          Você tem um aviso não enviado
+        </h1>
+        <div className="rounded-2xl border-l-4 border-attention bg-white p-4 shadow-sm">
+          <p className="flex items-center gap-2 font-semibold text-ink">
+            <Save size={18} aria-hidden="true" /> Salvo só neste aparelho — ainda não enviado
+          </p>
+          <p className="mt-1 text-sm text-muted">
+            Guardado em {formatBrasilia(pendingDraft.savedAt)}
+            {where && <> · {where}</>} · etapa {Math.min(pendingDraft.step, STEPS.length - 1) + 1} de {STEPS.length}
+          </p>
+          {isOldDraft(pendingDraft) && (
+            <p className="mt-2 rounded-lg bg-amber-100 p-2 text-sm text-amber-900">
+              Este rascunho tem mais de 7 dias. Confira se a situação ainda é a mesma antes de enviar.
+            </p>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              const base = emptyDraft();
+              setDraft({ ...base, ...d, observedDate: d.observedDate || base.observedDate, observedTime: d.observedTime || base.observedTime });
+              setStep(Math.min(Math.max(pendingDraft.step, 0), STEPS.length - 1));
+              setSavedAt(pendingDraft.savedAt);
+              setPendingDraft(null);
+            }}
+            className="min-h-12 rounded-xl bg-navy px-5 font-bold text-white"
+          >
+            Continuar de onde parei
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              clearDraft();
+              setPendingDraft(null);
+            }}
+            className="min-h-12 rounded-xl border border-navy/30 bg-white px-5 font-bold text-navy"
+          >
+            Descartar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const observedIso = brasiliaToUtcIso(draft.observedDate, draft.observedTime);
 
   return (
@@ -211,6 +293,11 @@ export default function ReportForm() {
         <h1 ref={headingRef} tabIndex={-1} className="text-2xl font-extrabold text-navy">
           {current.title}
         </h1>
+        {savedAt && (
+          <p role="status" className="mt-1 flex items-center gap-1 text-xs text-muted">
+            <Save size={14} aria-hidden="true" /> Rascunho salvo só neste aparelho às {formatBrasilia(savedAt).slice(-5)} — ainda não enviado.
+          </p>
+        )}
       </div>
 
       {!dataSource.canSubmit && (

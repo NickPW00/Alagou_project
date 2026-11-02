@@ -1,4 +1,5 @@
 import { Map, Megaphone } from 'lucide-react';
+import { InstallButton } from '../components/AppStatus';
 import { Link } from 'react-router-dom';
 import { ReportSummary } from '../components/ReportDetail';
 import { Card, EmptyState, ExampleTag, SafetyBox } from '../components/ui';
@@ -30,6 +31,7 @@ export default function Home() {
           <Link to="/avisar" className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-sky text-lg font-bold text-navy shadow">
             <Megaphone aria-hidden="true" /> Avisar alagamento
           </Link>
+          <InstallButton className="sm:col-span-2" />
         </div>
       </section>
 

@@ -33,6 +33,26 @@ export default function About() {
       </Card>
 
       <Card>
+        <h2 className="font-bold text-navy">Instalar o Alag@u no celular</h2>
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
+          <li>
+            <strong>Android (Chrome):</strong> toque em “Instalar o app” na tela inicial do Alag@u ou, no menu ⋮ do navegador, em “Instalar
+            aplicativo” / “Adicionar à tela inicial”.
+          </li>
+          <li>
+            <strong>iPhone (Safari):</strong> toque em Compartilhar (quadrado com seta) e depois em “Adicionar à Tela de Início”.
+          </li>
+        </ul>
+        <p className="mt-2 text-sm">
+          Depois da primeira visita, o app abre mesmo sem internet. Os relatos mostrados podem estar desatualizados quando você estiver offline.
+        </p>
+        <p className="mt-2 text-sm">
+          <strong>Rascunhos:</strong> enquanto você preenche um aviso, ele é salvo só neste aparelho (inclusive o ponto marcado no mapa) até ser
+          enviado ou descartado. Ninguém mais tem acesso a esse rascunho.
+        </p>
+      </Card>
+
+      <Card>
         <h2 className="font-bold text-navy">Privacidade e termos</h2>
         <p className="mt-1 text-sm">
           A Política de Privacidade e os Termos de Participação preliminares serão publicados na Fase 3, para revisão jurídica da UERJ. Princípios

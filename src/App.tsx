@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import ErrorBoundary from './components/ErrorBoundary';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 
@@ -27,6 +28,19 @@ const TITLES: Record<string, string> = {
   '/admin': 'Painel administrativo',
 };
 
+/** Exibida quando uma parte do app não pôde ser carregada (ex.: offline e ainda não salva no aparelho). */
+function ChunkError() {
+  return (
+    <div role="alert" className="m-4 rounded-2xl bg-white p-6 text-center shadow-sm">
+      <p className="text-lg font-bold text-navy">Esta parte do app ainda não foi salva neste aparelho.</p>
+      <p className="mt-1 text-muted">Conecte-se à internet e tente de novo.</p>
+      <button type="button" onClick={() => location.reload()} className="mt-4 min-h-11 rounded-xl bg-navy px-5 font-bold text-white">
+        Tentar de novo
+      </button>
+    </div>
+  );
+}
+
 export default function App() {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -35,6 +49,7 @@ export default function App() {
 
   return (
     <Layout>
+      <ErrorBoundary key={pathname} fallback={<ChunkError />}>
       <Suspense fallback={<p role="status" className="p-6 text-center text-navy">Carregando…</p>}>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -50,6 +65,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       </Suspense>
+      </ErrorBoundary>
     </Layout>
   );
 }

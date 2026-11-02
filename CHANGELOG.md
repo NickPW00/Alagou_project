@@ -4,6 +4,14 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Versões: [SemVe
 
 ## [Não lançado]
 
+## [0.5.0] — 2026-11-02
+### Adicionado
+- A3: app instalável (PWA) com funcionamento offline, aviso de nova versão, botão "Instalar o app" e faixa de offline.
+- A3: rascunho do aviso salvo só no aparelho, com "Continuar de onde parei" / "Descartar".
+### Corrigido
+- O formulário passa a abrir offline mesmo sem o código do mapa salvo (mapa carregado à parte, com aviso).
+- Rascunho gravado imediatamente ao fechar ou esconder a página.
+
 ## [0.4.0] — 2026-11-02
 ### Adicionado
 - A2: selo "EXEMPLO" em todo dado fictício — mapa (pontos, agrupamentos, histórico), listas, detalhes, Início, Memória e painel administrativo.

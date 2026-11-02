@@ -2,7 +2,7 @@ import { Layers, List, Map as MapIcon, Search, SlidersHorizontal } from 'lucide-
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Legend from '../components/Legend';
-import MapView from '../components/MapView';
+import MapView from '../components/LazyMap';
 import ReportDetail, { ReportSummary } from '../components/ReportDetail';
 import { EmptyState, ExampleTag } from '../components/ui';
 import { useHistorical, useReports } from '../data';

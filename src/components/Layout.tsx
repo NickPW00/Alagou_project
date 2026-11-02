@@ -15,6 +15,7 @@ import {
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { isDemo } from '../data';
+import { OfflineBanner, UpdatePrompt } from './AppStatus';
 import { Disclaimer } from './ui';
 
 export function Brand({ compact = false }: { compact?: boolean }) {
@@ -191,6 +192,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         Pular para o conteúdo
       </a>
       <DemoBanner />
+      <OfflineBanner />
       <header className="bg-navy text-white short:hidden">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2">
           <Link to="/" title="Página inicial" className="shrink-0" data-testid="brand">
@@ -278,6 +280,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         </ul>
       </nav>
       <MoreMenu open={moreOpen} onClose={() => setMoreOpen(false)} />
+      <UpdatePrompt />
     </div>
   );
 }

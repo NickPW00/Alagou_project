@@ -77,6 +77,9 @@ test('fluxo completo de aviso em 8 etapas aparece no mapa', async ({ page }) => 
   await expect(detail.getByText('Rua totalmente alagada')).toBeVisible();
   await expect(detail.getByText('Água subindo')).toBeVisible();
   await expect(detail.getByText('Relato recente')).toBeVisible();
+
+  // A3: após o envio, não sobra rascunho.
+  expect(await page.evaluate(() => localStorage.getItem('alagou:rascunho:v1'))).toBeNull();
 });
 
 test('GPS negado mostra orientação para marcar no mapa', async ({ page, context }) => {

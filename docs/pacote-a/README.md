@@ -10,7 +10,7 @@ Autorizado pela coordenação em 02/11/2026. Decisões tomadas:
 |---|---|---|
 | A1 Responsividade | [A1-responsividade.md](A1-responsividade.md) | **implementado e testado** (0.3.0) |
 | A2 Selo "EXEMPLO" | [A2-selo-exemplo.md](A2-selo-exemplo.md) | **implementado e testado** (0.4.0) |
-| A3 App instalável + rascunho local | — | planejado |
+| A3 App instalável + rascunho local | [A3-pwa-rascunho.md](A3-pwa-rascunho.md) | **implementado e testado** (0.5.0) |
 | A4 Busca de endereços + limites IBGE | — | planejado |
 | A5 Trecho da rua | — | planejado |
 | A6 Conteúdo de segurança e educativo | — | planejado |

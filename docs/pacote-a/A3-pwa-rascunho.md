@@ -53,4 +53,41 @@ Fora do escopo (dependem do banco, Fase 3): envio automático do rascunho quando
 - Ponta a ponta: rascunho no servidor de desenvolvimento; PWA e offline num novo projeto Playwright, que roda contra a **versão de produção** (`vite build` + `vite preview`), porque o service worker só existe nela.
 
 ## 3. Como foi
-*(preenchido ao concluir o item)*
+
+**Status:** implementado e testado (versão 0.5.0).
+
+### 3.1 Entregue
+- **PWA** com `vite-plugin-pwa` 2.0:
+  - manifesto em pt-BR;
+  - ícones 192/512, *maskable* e `apple-touch-icon`, gerados por `scripts/gerar-icones.mjs`;
+  - pré-cache de 437 kB (sem o código do mapa);
+  - cache do código do mapa no primeiro uso;
+  - cache do estilo e de até 600 blocos de mapa (7 dias);
+  - links diretos funcionando offline.
+- **Faixa "Sem internet — mostrando informações salvas neste aparelho."**, aviso **"Nova versão disponível — Atualizar / Depois"** e botão **"Instalar o app"** (quando o navegador oferece), com instruções para iPhone e Android na página Sobre.
+- **Rascunho do aviso** (`src/data/draftStore.ts`):
+  - gravação automática;
+  - escolha explícita entre "Continuar de onde parei" e "Descartar";
+  - aviso "Salvo só neste aparelho — ainda não enviado";
+  - restauração da etapa;
+  - alerta para rascunhos com mais de 7 dias;
+  - remoção após o envio.
+
+### 3.2 Desvios e defeitos encontrados durante a verificação
+| Situação | O que foi feito |
+|---|---|
+| **Defeito:** o formulário não abria offline para quem nunca tinha aberto o mapa, porque o código do formulário dependia do código do mapa, que só é guardado no primeiro uso. O teste inicial não pegou porque visitava o mapa antes. | O mapa passou a ser carregado à parte (`LazyMap`): sem o código do mapa, aparece "Mapa indisponível sem internet" e o formulário continua funcionando (o GPS funciona offline). Também foi adicionada uma proteção geral: "Esta parte do app ainda não foi salva neste aparelho". O teste agora cobre essa ordem. |
+| **Defeito:** digitar e fechar a página em menos de 300 ms perdia as últimas letras do rascunho (achado por um teste intermitente). | Gravação imediata nos eventos `pagehide` e `visibilitychange` e ao sair da tela. Teste repetido 4 vezes sem falha. |
+| Nenhum desvio de escopo. | — |
+
+### 3.3 Resultados
+- Unitários: **27/27** (6 novos do rascunho, incluindo JSON corrompido e navegação privada).
+- Ponta a ponta: **75 passaram**, 31 ignorados (por desenho), **0 falhas**. Novos:
+  - `e2e/draft.spec.ts` (3 cenários × 2 perfis);
+  - projeto `pwa` contra a versão de produção (manifesto, ícones e funcionamento offline, inclusive o formulário sem o mapa salvo).
+- Verificação manual no **subcaminho do GitHub Pages** (`/Alagou_project/`): escopo do service worker correto e formulário abrindo offline, com a faixa de offline e o aviso no lugar do mapa.
+
+### 3.4 Pendências
+- Envio automático do rascunho quando a conexão voltar: Fase 3 (com banco).
+- Teste de instalação em aparelho físico: Fase 7.
+- Ícones serão refeitos se a identidade visual definitiva do Alag@u mudar.
