@@ -1,5 +1,5 @@
 {
- "executado_em": "2026-11-02T23:17:35.128Z",
+ "executado_em": "2026-11-02T23:26:20.922Z",
  "origem": "GitHub Actions (servidores fora do Brasil)",
  "resultados": [
   {
@@ -106,7 +106,7 @@
    "cors": "https://nickpw00.github.io",
    "bytes": 425890,
    "inicio": "{\"hoje\":[{\"id\":56247,\"id_aviso\":28601,\"id_sequencia\":1,\"id_condicao_severa\":23,\"id_icone\":140,\"id_usuario\":110,\"codigo\":\"urn:oid:2.49.0.0.76.0.2026.28601.1\",\"referencia\":null,\"data_inicio\":\"2026-11-02T00:00:00.000Z\",\"hora_inicio\":\"10:00\",\"data_fim\":\"2026-11-02T00:00:00.000Z\",\"hora_fim\":\"21:00\",\"poli",
-   "ms": 2140
+   "ms": 2172
   },
   {
    "fonte": "INMET",
@@ -120,7 +120,7 @@
    "cors": "https://nickpw00.github.io",
    "bytes": 145971,
    "inicio": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <rss version=\"2.0\"> <channel> <title>Avisos</title> <link>https://avisos.inmet.gov.br</link> <description>Avisos atuais na América do Sul</description> <!-- About Copyright: Licenca de Uso: O conteudo deste site, podera ser reproduzido desde que citada a fonte",
-   "ms": 1913
+   "ms": 2777
   },
   {
    "fonte": "INMET",
@@ -134,7 +134,7 @@
    "cors": "https://nickpw00.github.io",
    "bytes": 269993,
    "inicio": "{\"3301702\":{\"02/11/2026\":{\"manha\":{\"uf\":\"RJ\",\"entidade\":\"Duque de Caxias\",\"resumo\":\"Muitas nuvens\",\"tempo\":\"\",\"temp_max\":34,\"temp_min\":19,\"dir_vento\":\"SE-S\",\"int_vento\":\"Fracos\",\"cod_icone\":\"34\",\"icone\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABWCAYAAABPaoF5AAAACXBIWXMAAC4jAAAuIwF4pT92AA",
-   "ms": 453
+   "ms": 457
   },
   {
    "fonte": "INMET",
@@ -142,7 +142,7 @@
    "url": "https://alertas2.inmet.gov.br/",
    "ok": false,
    "erro": "TypeError: ECONNRESET",
-   "ms": 865
+   "ms": 754
   },
   {
    "fonte": "INMET",
@@ -156,7 +156,21 @@
    "cors": "https://nickpw00.github.io",
    "bytes": 76270,
    "inicio": " <!DOCTYPE html> <html lang=\"pt_BR\"> <head> <!-- Meta --> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <title>Instituto Nacional de Meteorologia - INMET</title> <!-- Fonts --> <link href='https://fonts.googleapis.com/css?f",
-   "ms": 1837
+   "ms": 1742
+  },
+  {
+   "fonte": "INMET",
+   "descricao": "Página de avisos indicada no RSS do INMET (link do app)",
+   "url": "https://avisos.inmet.gov.br",
+   "ok": true,
+   "http": 200,
+   "url_final": "https://avisos.inmet.gov.br/",
+   "tipo": "text/html",
+   "compressao": "gzip",
+   "cors": "https://nickpw00.github.io",
+   "bytes": 2318,
+   "inicio": "<!doctype html><html lang=\"pt-br\"><head><meta charset=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"/><link rel=\"”shortcut\" icon” href=\"”/favicon.ico”\"><title>INMET - Avisos</title><link href=\"/static/css/2.872f58be.chunk.css\" rel=\"stylesheet\"><link href=\"/static/css/mai",
+   "ms": 1099
   },
   {
    "fonte": "Cemaden",
@@ -164,7 +178,7 @@
    "url": "https://mapainterativo.cemaden.gov.br/",
    "ok": false,
    "erro": "TypeError: UND_ERR_CONNECT_TIMEOUT",
-   "ms": 10485
+   "ms": 10491
   },
   {
    "fonte": "Cemaden",
@@ -172,7 +186,7 @@
    "url": "https://sws.cemaden.gov.br/PED/",
    "ok": false,
    "erro": "TypeError: UND_ERR_CONNECT_TIMEOUT",
-   "ms": 10497
+   "ms": 10496
   },
   {
    "fonte": "Cemaden",
@@ -186,7 +200,7 @@
    "cors": null,
    "bytes": 213827,
    "inicio": "<!DOCTYPE html> <html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"pt-br\" xml:lang=\"pt-br\"> <head> <meta charset=\"utf-8\" /> <!-- Google Tag Manager --> <script type=\"text\">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByT",
-   "ms": 1041
+   "ms": 955
   },
   {
    "fonte": "Defesa Civil RJ",
@@ -200,7 +214,7 @@
    "cors": null,
    "bytes": 142803,
    "inicio": " <!doctype html> <html lang=\"en-gb\" dir=\"ltr\"> <head> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <meta charset=\"utf-8\"> <meta name=\"generator\" content=\"Helix Ultimate - The Most Popular Joomla! Template Framework.\"> <title>Defesa Civil RJ </title",
-   "ms": 1895
+   "ms": 2678
   },
   {
    "fonte": "Prefeitura de Duque de Caxias",
@@ -213,8 +227,8 @@
    "compressao": null,
    "cors": null,
    "bytes": 3838,
-   "inicio": "<!DOCTYPE html> <html lang=\"pt-BR\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <meta name=\"csrf-token\" content=\"Rqps9qUWpfVVSC2A8rMXbYVobhUd9xGSByL7IJUA\"> <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-RX",
-   "ms": 874
+   "inicio": "<!DOCTYPE html> <html lang=\"pt-BR\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <meta name=\"csrf-token\" content=\"pXCC6tKJoxy8jGLBcJOPTmbq3zdaIiEAvb7kVEsC\"> <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-RX",
+   "ms": 1059
   },
   {
    "fonte": "Open-Meteo",
@@ -226,9 +240,9 @@
    "tipo": "application/json; charset=utf-8",
    "compressao": "deflate",
    "cors": "*",
-   "bytes": 6571,
-   "inicio": "[{\"latitude\":-22.81195,\"longitude\":-43.3125,\"generationtime_ms\":0.05257129669189453,\"utc_offset_seconds\":-10800,\"timezone\":\"America/Sao_Paulo\",\"timezone_abbreviation\":\"GMT-3\",\"elevation\":13.0,\"hourly_units\":{\"time\":\"iso8601\",\"precipitation\":\"mm\",\"precipitation_probability\":\"%\"},\"hourly\":{\"time\":[\"20",
-   "ms": 559
+   "bytes": 6572,
+   "inicio": "[{\"latitude\":-22.81195,\"longitude\":-43.3125,\"generationtime_ms\":0.07474422454833984,\"utc_offset_seconds\":-10800,\"timezone\":\"America/Sao_Paulo\",\"timezone_abbreviation\":\"GMT-3\",\"elevation\":13.0,\"hourly_units\":{\"time\":\"iso8601\",\"precipitation\":\"mm\",\"precipitation_probability\":\"%\"},\"hourly\":{\"time\":[\"20",
+   "ms": 647
   }
  ]
 }
