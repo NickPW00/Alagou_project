@@ -6,9 +6,11 @@
 // Observação: a API do IBGE pode recusar conexões de fora do Brasil (ex.: servidores do GitHub Actions).
 // Para limites oficiais do IBGE, rode este script num computador no Brasil com --source ibge.
 // Requer Node 22.18+ (executa os módulos TypeScript de src/geo diretamente).
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { buildLimites, buildLimitesFromOsm, buildPlaces, buildStreetIndex, limitesBBox, MUNICIPIO_IBGE } from '../../src/geo/pipeline.ts';
+import { buildLimites, buildLimitesFromOsm, buildPlaces, buildStreetIndex, limitesBBox, municipioOf, MUNICIPIO_IBGE } from '../../src/geo/pipeline.ts';
+import { pointInGeometry } from '../../src/geo/geometry.ts';
+import { CELL_SIZE, cellsOfLine, splitAtIntersections } from '../../src/geo/segments.ts';
 
 const args = process.argv.slice(2);
 const opt = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
@@ -98,6 +100,13 @@ const bairros = fixture ? { data: readFix('overpass-bairros.json'), endpoint: 'f
 const indice = buildStreetIndex(ruas.data, limites);
 const places = buildPlaces(bairros.data, limites);
 
+// A5 — trechos de rua cortados nos cruzamentos, agrupados em blocos (células) de ~1,1 km.
+const ways = ruas.data.elements.filter((e) => e.type === 'way');
+const munGeom = municipioOf(limites).geometry;
+const segments = splitAtIntersections(ways).filter((sg) => pointInGeometry(sg.c[Math.floor(sg.c.length / 2)], munGeom));
+const cells = new Map();
+for (const sg of segments) for (const k of cellsOfLine(sg.c)) (cells.get(k) ?? cells.set(k, []).get(k)).push(sg);
+
 // Verificações de sanidade: não gravar dados quebrados.
 const nDistritos = limites.features.filter((f) => f.properties.tipo === 'distrito').length;
 const fonteLimites = limites.features[0].properties.fonte;
@@ -110,6 +119,16 @@ const write = (f, o) => writeFileSync(resolve(outDir, f), JSON.stringify(o));
 write('limites.geojson', limites);
 write('ruas-indice.json', indice);
 write('bairros-osm.json', places);
+const trechosDir = resolve(outDir, 'trechos');
+rmSync(trechosDir, { recursive: true, force: true });
+mkdirSync(trechosDir, { recursive: true });
+let trechosBytes = 0;
+for (const [k, list] of cells) {
+  const body = JSON.stringify(list);
+  trechosBytes += Buffer.byteLength(body);
+  writeFileSync(resolve(trechosDir, `${k}.json`), body);
+}
+writeFileSync(resolve(trechosDir, 'indice.json'), JSON.stringify({ tamanho_celula_graus: CELL_SIZE, celulas: [...cells.keys()].sort() }));
 write('fontes.json', {
   gerado_em: now,
   sintetico: Boolean(fixture),
@@ -121,6 +140,13 @@ write('fontes.json', {
     acessado_em: now,
     observacao: 'Nomes de bairro do OSM não são limites oficiais.',
   },
-  contagens: { distritos: nDistritos, ruas_no_indice: indice.length, bairros_osm: places.length },
+  trechos: {
+    descricao: 'Vias do OpenStreetMap cortadas nos cruzamentos (nós compartilhados) e nas pontas; base derivada do OSM (ODbL).',
+    tamanho_celula_graus: CELL_SIZE,
+    celulas: cells.size,
+    bytes_total: trechosBytes,
+    bytes_medio_por_celula: cells.size ? Math.round(trechosBytes / cells.size) : 0,
+  },
+  contagens: { distritos: nDistritos, ruas_no_indice: indice.length, bairros_osm: places.length, trechos: segments.length },
 });
-console.log(`OK: ${nDistritos} distritos, ${indice.length} entradas de ruas, ${places.length} bairros → ${outDir}`);
+console.log(`OK: ${nDistritos} distritos, ${indice.length} entradas de ruas, ${places.length} bairros, ${segments.length} trechos em ${cells.size} blocos (${Math.round(trechosBytes / 1024)} kB) → ${outDir}`);

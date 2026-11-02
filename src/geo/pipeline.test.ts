@@ -25,7 +25,7 @@ describe('processamento dos dados geográficos (A4)', () => {
     expect(flores).toHaveLength(3);
     expect(flores.map((e) => e.d).sort()).toEqual(['Duque de Caxias', 'Duque de Caxias', 'Imbariê']);
     expect(idx.find((e) => e.n === 'Rua Fora do Município')).toBeUndefined();
-    expect(idx).toHaveLength(4);
+    expect(idx).toHaveLength(5);
   });
   it('bairros do OSM: dentro do município e sem duplicatas', () => {
     const p = buildPlaces(fx('overpass-bairros.json'), limites);
