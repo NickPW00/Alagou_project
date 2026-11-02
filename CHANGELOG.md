@@ -4,6 +4,10 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Versões: [SemVe
 
 ## [Não lançado]
 
+## [0.11.0] — 2026-11-02
+### Adicionado
+- A8: rascunhos (não vigentes) da Política de Privacidade e dos Termos de Participação em `docs/legal/`; seção "Seus dados hoje" na página Sobre, com os serviços externos usados e links para os rascunhos.
+
 ## [0.10.0] — 2026-11-02
 ### Adicionado
 - A7: avisos meteorológicos oficiais do INMET para Duque de Caxias (filtrados pelo código IBGE), com severidade, validade, orientações, código CAP, fonte e horário; resumo no Início pela última consulta.

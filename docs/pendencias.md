@@ -8,6 +8,8 @@
 
 - [ ] Revisar os textos do Aprenda e Previna (A6) e definir as referências científicas
 
+- [ ] Revisão jurídica dos rascunhos de Política de Privacidade e Termos (A8): controlador, DPO, bases legais, menores, retenção, licença
+
 ## Técnicas
 - [x] Sobreposição do menu sobre o nome Alag@u (corrigido no A1, 0.3.0)
 - [x] Mapa muito baixo em celular deitado e em 320 px (corrigido no A1, 0.3.0)

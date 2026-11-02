@@ -108,12 +108,42 @@ export default function About() {
       </Card>
 
       <Card>
+        <h2 className="font-bold text-navy">Seus dados hoje</h2>
+        <p className="mt-1 text-sm">
+          Nesta versão de demonstração <strong>não há cadastro nem banco de dados</strong>: o Alag@u não guarda nenhum dado seu em servidor. Para
+          funcionar, o app usa serviços externos que recebem dados técnicos da sua conexão (como o endereço IP):
+        </p>
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
+          <li>GitHub Pages: hospedagem do site;</li>
+          <li>OpenFreeMap: mapa de fundo (recebe a área do mapa visualizada);</li>
+          <li>Photon (komoot): busca de lugares (recebe o texto digitado nessa busca);</li>
+          <li>Open-Meteo: previsão de chuva (as coordenadas consultadas são fixas, dos distritos, e não as suas);</li>
+          <li>INMET: avisos meteorológicos oficiais.</li>
+        </ul>
+        <p className="mt-2 text-sm">
+          No seu aparelho ficam guardados, sem envio a ninguém: o rascunho de um aviso não enviado, a última previsão consultada e cópias do app
+          para uso sem internet. Para apagar, limpe os dados do site no navegador.
+        </p>
+      </Card>
+
+      <Card>
         <h2 className="font-bold text-navy">Privacidade e termos</h2>
         <p className="mt-1 text-sm">
-          A Política de Privacidade e os Termos de Participação preliminares serão publicados na Fase 3, para revisão jurídica da UERJ. Princípios
-          já adotados: consulta pública sem cadastro; nome e e-mail nunca exibidos; sem localização contínua; fotos só após moderação e sem
-          metadados.
+          A Política de Privacidade e os Termos de Participação valerão a partir da versão com cadastro e estão em revisão jurídica. Princípios já
+          adotados: consulta pública sem cadastro; nome e e-mail nunca exibidos; sem localização contínua; fotos só após moderação e sem metadados.
         </p>
+        <ul className="mt-2 space-y-1 text-sm">
+          <li>
+            <a href="https://github.com/NickPW00/Alagou_project/blob/claude/stoic-ramanujan-h530ag/docs/legal/politica-de-privacidade-RASCUNHO.md" target="_blank" rel="noopener noreferrer" className="font-semibold text-navy underline">
+              Política de Privacidade (rascunho, não vigente)<span className="sr-only"> — abre em nova aba</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/NickPW00/Alagou_project/blob/claude/stoic-ramanujan-h530ag/docs/legal/termos-de-participacao-RASCUNHO.md" target="_blank" rel="noopener noreferrer" className="font-semibold text-navy underline">
+              Termos de Participação (rascunho, não vigente)<span className="sr-only"> — abre em nova aba</span>
+            </a>
+          </li>
+        </ul>
       </Card>
       <SafetyBox />
     </div>
