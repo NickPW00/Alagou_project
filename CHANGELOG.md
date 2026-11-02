@@ -4,6 +4,14 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Versões: [SemVe
 
 ## [Não lançado]
 
+## [0.3.0] — 2026-11-02
+### Adicionado
+- A1: trilho lateral de navegação (768–1023 px), menu "Mais" no topo do desktop, filtros compactos do mapa, lista fixa ao lado do mapa (≥ 1440 px), painel lateral de detalhes (≥ 768 px) e formulário em duas colunas (≥ 1024 px).
+- Matriz automática de 15 tamanhos de tela (celulares mais comuns, tablet, notebooks, monitor) e galeria de prints na CI.
+### Corrigido
+- Menu do topo se sobrepunha ao nome Alag@u em telas de 1024–1439 px.
+- Mapa baixo demais em celular deitado e em telas de 320 px.
+
 ## [0.2.0] — 2026-11-02
 ### Adicionado
 - Fase 2: estrutura visual completa em modo demonstração (Início, Mapa ao Vivo, formulário em 8 etapas, Memória, Alertas, Aprenda, Dados, Participação, Sobre, esboço do painel administrativo).

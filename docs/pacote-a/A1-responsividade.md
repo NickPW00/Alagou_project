@@ -75,4 +75,38 @@ Alternativas consideradas:
 
 ## 3. Como foi
 
-*(preenchido ao concluir o item)*
+**Status:** implementado e testado (versão 0.3.0).
+
+### 3.1 Entregue
+- **Topo do desktop:** marca + Início, Mapa, Avisar alagamento, Alertas e um menu **"Mais"** (fecha com Esc, com clique fora ou ao navegar). A marca não encolhe e o menu não quebra linha. A partir de 1600 px, todos os itens ficam visíveis.
+- **Trilho lateral** de 768 a 1023 px (tablets e celulares deitados), com o botão "Avisar" destacado e alvos de toque ≥ 44 px. A lista de itens fica fixa ao rolar a página.
+- **Tela baixa** (celular deitado): cabeçalho escondido, marca no topo do trilho e faixa de demonstração numa linha curta.
+- **Filtros do mapa compactos** (≤ 479 px e tela baixa): busca + botão **"Filtros"**, com contador de filtros ativos.
+- **"Atualizado às…"** passou a ser um selo sobre o mapa, visível em todos os tamanhos.
+- **Painel lateral** de detalhes a partir de 768 px. **Lista fixa ao lado do mapa** a partir de 1440 px.
+- **Formulário** "Onde aconteceu?" em duas colunas a partir de 1024 px, com o mapa maior e fixo.
+- **Matriz automática** (`e2e/responsive.spec.ts`) com 15 tamanhos, e a **galeria de prints** publicada como artefato a cada execução da CI (`galeria-telas`).
+
+### 3.2 Desvios em relação ao planejado
+| Planejado | Feito | Motivo |
+|---|---|---|
+| Todos os itens no topo a partir de 1440 px | A partir de **1600 px** | Medido: os 10 itens com os nomes completos não cabem numa linha em 1440 px |
+| Esconder o cabeçalho em tela baixa só no mapa | Escondido em **todas as páginas** em tela baixa | Na revisão visual, o item "Mais" do trilho ficava cortado no Início com o celular deitado |
+
+### 3.3 Resultados
+| Tela | Mapa antes | Mapa depois |
+|---|---|---|
+| Celular deitado 844×390 | 142 px (36%) | ≥ 55% (critério verificado) |
+| 320×568 | 212 px (37%) | ≥ 55% |
+| Notebook 1280×720 | menu sobre a marca | sem sobreposição (verificado por teste) |
+
+- Matriz de responsividade: **30/30** testes passando (15 tamanhos × 2 testes).
+- Suíte completa: **65 passaram**, 31 ignorados (a matriz roda só uma vez, no projeto desktop; o teste do menu "Mais" é só de celular), **0 falhas**. Testes unitários: **20/20**.
+- Problemas encontrados pelos testes e corrigidos durante o item:
+  - alvo de toque de 36 px no logo do trilho;
+  - "Mais" cortado no celular deitado;
+  - seletores duplicados de distrito nos testes antigos.
+
+### 3.4 Pendências
+- Teste em aparelhos físicos (Fase 7).
+- Zoom de texto em 200%: não entrou na matriz automática nesta versão. Fica para revisão em conjunto com o A6 (conteúdo).

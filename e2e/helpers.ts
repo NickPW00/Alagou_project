@@ -34,3 +34,13 @@ export async function expectNoHorizontalScroll(page: Page) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 }
+
+/** Em telas estreitas os filtros do mapa ficam atrás do botão "Filtros". */
+export async function openMapFilters(page: Page) {
+  await page.getByRole('searchbox', { name: 'Pesquisar rua ou bairro' }).waitFor();
+  const btn = page.getByRole('button', { name: /^Filtros/ });
+  if (await btn.isVisible() && (await btn.getAttribute('aria-expanded')) !== 'true') await btn.click();
+}
+
+/** Seletor de distrito visível (há um na barra e outro no painel de filtros). */
+export const districtSelect = (page: Page) => page.getByLabel('Filtrar por distrito').filter({ visible: true });

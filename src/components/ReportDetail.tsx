@@ -55,7 +55,7 @@ export default function ReportDetail({ report, onClose }: { report: PublicReport
       role="dialog"
       aria-modal="false"
       aria-labelledby="report-title"
-      className="absolute inset-x-0 bottom-0 z-40 max-h-[75%] overflow-y-auto rounded-t-3xl bg-white p-4 shadow-2xl lg:bottom-4 lg:left-4 lg:right-auto lg:w-[26rem] lg:rounded-3xl"
+      className="absolute inset-x-0 bottom-0 z-40 max-h-[75%] overflow-y-auto rounded-t-3xl bg-white p-4 shadow-2xl md:bottom-auto md:left-4 md:right-auto md:top-4 md:max-h-[calc(100%-2rem)] md:w-[26rem] md:rounded-3xl short:top-2 short:max-h-[calc(100%-1rem)]"
     >
       <div className="mb-2 flex items-start justify-between gap-2">
         <div>

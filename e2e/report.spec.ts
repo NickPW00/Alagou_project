@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { stubMap } from './helpers';
+import { openMapFilters, stubMap } from './helpers';
 
 test.beforeEach(async ({ page }) => stubMap(page));
 
@@ -69,6 +69,7 @@ test('fluxo completo de aviso em 8 etapas aparece no mapa', async ({ page }) => 
   await expect(page.getByText(/publicado no mapa/)).toBeVisible();
 
   await page.getByRole('link', { name: 'Ver no mapa' }).click();
+  await openMapFilters(page);
   await page.getByRole('button', { name: 'Ver lista' }).click();
   await expect(page.getByRole('heading', { name: '9 relato(s)' })).toBeVisible();
   await page.getByRole('button', { name: /Rua Teste E2E/ }).click();

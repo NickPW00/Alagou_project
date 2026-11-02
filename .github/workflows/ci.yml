@@ -21,3 +21,10 @@ jobs:
       - run: npm run test:e2e
         env:
           CI: 'true'
+      - name: Galeria de prints da matriz de telas (revisão visual)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: galeria-telas
+          path: test-results/galeria
+          if-no-files-found: ignore

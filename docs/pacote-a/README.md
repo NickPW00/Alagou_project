@@ -8,7 +8,7 @@ Autorizado pela coordenação em 02/11/2026. Decisões tomadas:
 
 | Item | Documento | Status |
 |---|---|---|
-| A1 Responsividade | [A1-responsividade.md](A1-responsividade.md) | planejado |
+| A1 Responsividade | [A1-responsividade.md](A1-responsividade.md) | **implementado e testado** (0.3.0) |
 | A2 Selo "EXEMPLO" | — | planejado |
 | A3 App instalável + rascunho local | — | planejado |
 | A4 Busca de endereços + limites IBGE | — | planejado |

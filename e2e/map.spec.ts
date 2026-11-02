@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { expectAccessible, failMap, stubMap } from './helpers';
+import { districtSelect, expectAccessible, failMap, openMapFilters, stubMap } from './helpers';
 
 test('mapa carrega, filtra e abre detalhes pela lista', async ({ page }) => {
   await stubMap(page);
@@ -11,12 +11,13 @@ test('mapa carrega, filtra e abre detalhes pela lista', async ({ page }) => {
   await expect(page.locator('.maplibregl-canvas')).toBeVisible();
   await expectAccessible(page);
 
+  await openMapFilters(page);
   await page.getByRole('button', { name: 'Ver lista' }).click();
   await expect(page.getByRole('heading', { name: '8 relato(s)' })).toBeVisible();
 
-  await page.getByLabel('Filtrar por distrito').selectOption('Xerém');
+  await districtSelect(page).selectOption('Xerém');
   await expect(page.getByRole('heading', { name: '1 relato(s)' })).toBeVisible();
-  await page.getByLabel('Filtrar por distrito').selectOption('');
+  await districtSelect(page).selectOption('');
 
   await page.getByRole('searchbox', { name: 'Pesquisar rua ou bairro' }).fill('demonstracao d6');
   await expect(page.getByRole('heading', { name: '1 relato(s)' })).toBeVisible();
@@ -43,6 +44,7 @@ test('falha no serviço de mapas mostra aviso e lista de relatos', async ({ page
 test('camada histórica aparece na legenda ao escolher "Histórico"', async ({ page }) => {
   await stubMap(page);
   await page.goto('/mapa');
+  await openMapFilters(page);
   await page.getByRole('button', { name: 'Histórico' }).click();
   await page.getByRole('button', { name: 'Legenda' }).click();
   await expect(page.getByText('Já alagou (histórico)')).toBeVisible();

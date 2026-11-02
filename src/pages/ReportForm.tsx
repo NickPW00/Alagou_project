@@ -230,7 +230,8 @@ export default function ReportForm() {
         className="space-y-4"
       >
         {current.id === 'where' && (
-          <div className="space-y-4">
+          <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-x-8 lg:space-y-0">
+            <div className="space-y-4">
             <p className="text-sm text-muted">Informe o local do alagamento — não precisa ser onde você mora.</p>
             <Field id="district" label="Distrito *" error={errors.district}>
               <select id="district" className={input} value={draft.district ?? ''} onChange={(e) => set('district', (e.target.value || undefined) as District | undefined)} aria-invalid={!!errors.district}>
@@ -261,7 +262,9 @@ export default function ReportForm() {
               <input id="segmentDescription" className={input} value={draft.segmentDescription} onChange={(e) => set('segmentDescription', e.target.value)} />
             </Field>
 
-            <div>
+            </div>
+
+            <div className="lg:sticky lg:top-4 lg:self-start">
               <p className="mb-1 font-semibold">Localização no mapa *</p>
               <p className="mb-2 text-sm text-muted">Toque no mapa para marcar o trecho. Depois, arraste o marcador para ajustar.</p>
               <button type="button" onClick={useMyLocation} className="mb-2 flex min-h-12 items-center gap-2 rounded-xl border border-navy/30 bg-white px-4 font-semibold text-navy">
@@ -273,7 +276,7 @@ export default function ReportForm() {
                 </p>
               )}
               <MapView
-                className="h-72 overflow-hidden rounded-2xl ring-1 ring-black/10"
+                className="h-72 overflow-hidden rounded-2xl ring-1 ring-black/10 lg:h-[28rem]"
                 label="Mapa para marcar o local do alagamento"
                 pick={{ value: draft.location, onPick: (p) => setDraft((d) => ({ ...d, location: p, locationMethod: 'map_pin' })) }}
                 focus={draft.locationMethod === 'gps' ? draft.location : null}

@@ -2,6 +2,9 @@
 
 /* Paleta PROVISÓRIA do Alag@u — será ajustada quando a identidade oficial
    do Meninas pelo Clima for fornecida. */
+/* Tela baixa: celular deitado (altura útil pequena). */
+@custom-variant short (@media (max-height: 500px) and (orientation: landscape));
+
 @theme {
   --color-navy: #0b2545;
   --color-navy-700: #13315c;
