@@ -1,0 +1,21 @@
+# Pacote A — itens sem banco de dados
+
+Autorizado pela coordenação em 02/11/2026. Decisões tomadas:
+- ordem A1 → A9;
+- trecho da rua conforme proposto: até 100 m para cada lado do ponto, cortado nos cruzamentos; a pessoa confirma o trecho no formulário; na demonstração, os trechos são tracejados e têm o selo "EXEMPLO";
+- previsão de modelo não oficial (Open-Meteo) **aprovada**, sempre com o rótulo "não é aviso oficial";
+- testes de aparelho: sem aparelhos específicos; foco nos **celulares mais comuns** (simulados por tamanho de tela).
+
+| Item | Documento | Status |
+|---|---|---|
+| A1 Responsividade | [A1-responsividade.md](A1-responsividade.md) | planejado |
+| A2 Selo "EXEMPLO" | — | planejado |
+| A3 App instalável + rascunho local | — | planejado |
+| A4 Busca de endereços + limites IBGE | — | planejado |
+| A5 Trecho da rua | — | planejado |
+| A6 Conteúdo de segurança e educativo | — | planejado |
+| A7 INMET + previsão Open-Meteo | — | planejado |
+| A8 Política de Privacidade e Termos (rascunhos) | — | planejado |
+| A9 Link direto para um relato | — | planejado |
+
+Processo seguido: [processo-desenvolvimento.md](../processo-desenvolvimento.md).
