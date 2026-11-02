@@ -14,7 +14,7 @@ Uma iniciativa do projeto Meninas pelo Clima — LabPENSo/UERJ.
 
 - Fases 0 e 1 (diagnóstico e arquitetura): aprovadas.
 - Fase 2 (estrutura visual): concluída.
-- **Pacote A** (itens sem banco de dados: responsividade, selo EXEMPLO, app instalável/offline, busca de endereços e limites, trecho da rua, conteúdo educativo, avisos do INMET e previsão, privacidade, link direto + logomarcas): **concluído (0.12.0), aguardando validação** — ver [docs/pacote-a](docs/pacote-a/README.md).
+- **Pacote A** (itens sem banco de dados: responsividade, selo EXEMPLO, app instalável/offline, busca de endereços e limites, trecho da rua, conteúdo educativo, avisos do INMET e previsão, privacidade, link direto + logomarcas): **concluído (0.12.1), aguardando validação** — ver [docs/pacote-a](docs/pacote-a/README.md).
 - Ainda não há banco de dados: os relatos de demonstração são fictícios e sinalizados (faixa amarela e selo EXEMPLO).
 
 **Demonstração online:** https://nickpw00.github.io/Alagou_project/ (dados fictícios; publicada automaticamente a cada push — ver [guia](docs/publicacao.md)).

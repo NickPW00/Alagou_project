@@ -1,6 +1,6 @@
 # Pacote A — itens sem banco de dados
 
-**Situação: concluído em 02/11/2026 (versão 0.12.0).** Aguardando validação da coordenação.
+**Situação: concluído em 02/11/2026 (versão 0.12.1, com CI verde no GitHub).** Aguardando validação da coordenação.
 
 Autorizado pela coordenação em 02/11/2026. Decisões tomadas:
 - ordem A1 → A9;
