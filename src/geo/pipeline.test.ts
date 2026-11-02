@@ -33,3 +33,22 @@ describe('processamento dos dados geográficos (A4)', () => {
     expect(p[0].d).toBe('Imbariê');
   });
 });
+
+describe('limites pelo OpenStreetMap (alternativa ao IBGE)', () => {
+  it('monta município e distritos a partir das relações e geometrias', async () => {
+    const { buildLimitesFromOsm } = await import('./pipeline');
+    const l = buildLimitesFromOsm(fx('osm-relacoes.json'), fx('osm-geometrias.json'));
+    expect(l.features.map((f) => `${f.properties.tipo}:${f.properties.nome}:${f.properties.fonte}`)).toEqual([
+      'municipio:Duque de Caxias:OpenStreetMap',
+      'distrito:Xerém:OpenStreetMap',
+      'distrito:Imbariê:OpenStreetMap',
+      'distrito:Duque de Caxias:OpenStreetMap',
+      'distrito:Campos Elíseos:OpenStreetMap',
+    ]);
+    expect(districtAt(l, [-43.4, -22.6])).toBe('Xerém');
+  });
+  it('falha se o município não existir', async () => {
+    const { buildLimitesFromOsm } = await import('./pipeline');
+    expect(() => buildLimitesFromOsm({ elements: [] }, { features: [] })).toThrow(/não encontrado/);
+  });
+});

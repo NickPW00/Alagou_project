@@ -2,14 +2,18 @@
 // Uso:
 //   node scripts/geo/build.mjs                       (baixa do IBGE e do OpenStreetMap; usado pelo GitHub Actions)
 //   node scripts/geo/build.mjs --fixture DIR --out D (dados sintéticos, para testes)
+//   --source ibge|osm|auto   origem dos limites (padrão: auto = IBGE e, se inacessível, OpenStreetMap)
+// Observação: a API do IBGE pode recusar conexões de fora do Brasil (ex.: servidores do GitHub Actions).
+// Para limites oficiais do IBGE, rode este script num computador no Brasil com --source ibge.
 // Requer Node 22.18+ (executa os módulos TypeScript de src/geo diretamente).
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { buildLimites, buildPlaces, buildStreetIndex, limitesBBox, MUNICIPIO_IBGE } from '../../src/geo/pipeline.ts';
+import { buildLimites, buildLimitesFromOsm, buildPlaces, buildStreetIndex, limitesBBox, MUNICIPIO_IBGE } from '../../src/geo/pipeline.ts';
 
 const args = process.argv.slice(2);
 const opt = (name) => (args.includes(name) ? args[args.indexOf(name) + 1] : undefined);
 const fixture = opt('--fixture');
+const source = opt('--source') ?? 'auto';
 const outDir = resolve(opt('--out') ?? resolve(import.meta.dirname, '../../public/geo'));
 const now = new Date().toISOString();
 
@@ -47,10 +51,42 @@ async function overpass(query) {
 
 const readFix = (f) => JSON.parse(readFileSync(resolve(fixture, f), 'utf8'));
 
-const municipio = fixture ? readFix('ibge-municipio.json') : await getJson(IBGE_MALHA);
-const distritos = fixture ? readFix('ibge-distritos.json') : await getJson(IBGE_DISTRITOS);
-const nomes = fixture ? readFix('ibge-nomes.json') : await getJson(IBGE_NOMES);
-const limites = buildLimites(municipio, distritos, nomes);
+async function limitesIbge() {
+  const municipio = fixture ? readFix('ibge-municipio.json') : await getJson(IBGE_MALHA);
+  const distritos = fixture ? readFix('ibge-distritos.json') : await getJson(IBGE_DISTRITOS);
+  const nomes = fixture ? readFix('ibge-nomes.json') : await getJson(IBGE_NOMES);
+  return { limites: buildLimites(municipio, distritos, nomes), meta: { fonte: 'IBGE — API de Malhas v3 e API de Localidades', urls: [IBGE_MALHA, IBGE_DISTRITOS, IBGE_NOMES], licenca: 'Dados públicos do IBGE (citar a fonte)' } };
+}
+
+async function limitesOsm() {
+  const q = `[out:json][timeout:120];relation["boundary"="administrative"]["IBGE:GEOCODIGO"="${MUNICIPIO_IBGE}"]->.m;.m out ids tags;.m map_to_area->.a;relation(area.a)["boundary"="administrative"]["admin_level"~"^(9|10)$"];out ids tags;`;
+  const rels = fixture ? { data: readFix('osm-relacoes.json'), endpoint: 'fixture' } : await overpass(q);
+  const ids = rels.data.elements.filter((e) => e.type === 'relation').map((e) => `R${e.id}`);
+  const lookup = `https://nominatim.openstreetmap.org/lookup?osm_ids=${ids.join(',')}&format=geojson&polygon_geojson=1&polygon_threshold=0.00005`;
+  const geoms = fixture ? readFix('osm-geometrias.json') : await getJson(lookup);
+  return {
+    limites: buildLimitesFromOsm(rels.data, geoms),
+    meta: {
+      fonte: 'OpenStreetMap — relações administrativas (geometria montada pelo Nominatim). NÃO é a malha oficial do IBGE.',
+      urls: [rels.endpoint, lookup],
+      licenca: 'ODbL 1.0 — © colaboradores do OpenStreetMap',
+      motivo: source === 'osm' ? 'escolhido por parâmetro' : 'API do IBGE inacessível no momento da geração',
+    },
+  };
+}
+
+let geo;
+if (source === 'osm') geo = await limitesOsm();
+else {
+  try {
+    geo = await limitesIbge();
+  } catch (e) {
+    if (source === 'ibge') throw e;
+    console.warn(`IBGE inacessível (${e.message}). Usando limites do OpenStreetMap.`);
+    geo = await limitesOsm();
+  }
+}
+const limites = geo.limites;
 const [w, s, e, n] = limitesBBox(limites);
 const bbox = `${s},${w},${n},${e}`;
 
@@ -64,7 +100,9 @@ const places = buildPlaces(bairros.data, limites);
 
 // Verificações de sanidade: não gravar dados quebrados.
 const nDistritos = limites.features.filter((f) => f.properties.tipo === 'distrito').length;
-if (nDistritos !== 4) throw new Error(`Esperados 4 distritos, recebidos ${nDistritos}.`);
+const fonteLimites = limites.features[0].properties.fonte;
+if (fonteLimites === 'IBGE' && nDistritos !== 4) throw new Error(`Esperados 4 distritos do IBGE, recebidos ${nDistritos}.`);
+if (nDistritos !== 4) console.warn(`Atenção: ${nDistritos} distritos encontrados no OpenStreetMap (esperados 4). O distrito automático ficará limitado.`);
 if (!fixture && indice.length < 500) throw new Error(`Índice de ruas pequeno demais (${indice.length}); verifique o Overpass.`);
 
 mkdirSync(outDir, { recursive: true });
@@ -75,7 +113,7 @@ write('bairros-osm.json', places);
 write('fontes.json', {
   gerado_em: now,
   sintetico: Boolean(fixture),
-  limites: { fonte: 'IBGE — API de Malhas v3 e API de Localidades', urls: [IBGE_MALHA, IBGE_DISTRITOS, IBGE_NOMES], licenca: 'Dados públicos do IBGE (citar a fonte)', acessado_em: now },
+  limites: { ...geo.meta, oficial_ibge: fonteLimites === 'IBGE', distritos: limites.features.filter((f) => f.properties.tipo === 'distrito').map((f) => f.properties.nome), acessado_em: now },
   ruas_e_bairros: {
     fonte: 'OpenStreetMap (via Overpass API)',
     endpoint: ruas.endpoint,

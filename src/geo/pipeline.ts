@@ -6,7 +6,7 @@ export const MUNICIPIO_IBGE = '3301702';
 
 export type LimitFeature = {
   type: 'Feature';
-  properties: { tipo: 'municipio' | 'distrito'; codigo: string; nome: string };
+  properties: { tipo: 'municipio' | 'distrito'; codigo: string; nome: string; fonte?: 'IBGE' | 'OpenStreetMap' };
   geometry: AreaGeometry;
 };
 export type Limites = { type: 'FeatureCollection'; features: LimitFeature[] };
@@ -23,13 +23,43 @@ export function buildLimites(municipio: { features: IbgeFeature[] }, distritos: 
   const mun = municipio.features[0];
   if (!mun) throw new Error('Malha do município vazia.');
   const features: LimitFeature[] = [
-    { type: 'Feature', properties: { tipo: 'municipio', codigo: MUNICIPIO_IBGE, nome: 'Duque de Caxias' }, geometry: roundGeometry(mun.geometry) },
+    { type: 'Feature', properties: { tipo: 'municipio', codigo: MUNICIPIO_IBGE, nome: 'Duque de Caxias', fonte: 'IBGE' }, geometry: roundGeometry(mun.geometry) },
   ];
   for (const f of distritos.features) {
     const codigo = String(f.properties.codarea);
     const nome = nomePorCodigo.get(codigo);
     if (!nome) throw new Error(`Distrito ${codigo} sem nome na API de localidades.`);
-    features.push({ type: 'Feature', properties: { tipo: 'distrito', codigo, nome }, geometry: roundGeometry(f.geometry) });
+    features.push({ type: 'Feature', properties: { tipo: 'distrito', codigo, nome, fonte: 'IBGE' }, geometry: roundGeometry(f.geometry) });
+  }
+  return { type: 'FeatureCollection', features };
+}
+
+type OsmRel = { type: 'relation'; id: number; tags?: Record<string, string> };
+type NominatimFeature = { properties: { osm_id: number }; geometry: AreaGeometry | { type: string } };
+
+/**
+ * Alternativa quando a API do IBGE não está acessível: limites administrativos do OpenStreetMap.
+ * `rels`: relações (Overpass, com tags) — o município (IBGE:GEOCODIGO=3301702) e os distritos (admin_level 9/10).
+ * `geoms`: geometrias montadas pelo Nominatim (lookup com polygon_geojson=1).
+ */
+export function buildLimitesFromOsm(rels: { elements: (OsmRel | { type: string })[] }, geoms: { features: NominatimFeature[] }): Limites {
+  const geomById = new Map<number, AreaGeometry>();
+  for (const f of geoms.features)
+    if (f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon') geomById.set(Number(f.properties.osm_id), f.geometry as AreaGeometry);
+  const relations = rels.elements.filter((e): e is OsmRel => e.type === 'relation');
+  const mun = relations.find((r) => r.tags?.['IBGE:GEOCODIGO'] === MUNICIPIO_IBGE);
+  if (!mun || !geomById.has(mun.id)) throw new Error('Município não encontrado no OpenStreetMap.');
+  const features: LimitFeature[] = [
+    { type: 'Feature', properties: { tipo: 'municipio', codigo: MUNICIPIO_IBGE, nome: 'Duque de Caxias', fonte: 'OpenStreetMap' }, geometry: roundGeometry(geomById.get(mun.id)!) },
+  ];
+  for (const r of relations) {
+    if (r === mun || !r.tags?.name || !geomById.has(r.id)) continue;
+    if (!['9', '10'].includes(r.tags.admin_level ?? '')) continue;
+    features.push({
+      type: 'Feature',
+      properties: { tipo: 'distrito', codigo: r.tags['IBGE:GEOCODIGO'] ?? `osm-${r.id}`, nome: r.tags.name, fonte: 'OpenStreetMap' },
+      geometry: roundGeometry(geomById.get(r.id)!),
+    });
   }
   return { type: 'FeatureCollection', features };
 }

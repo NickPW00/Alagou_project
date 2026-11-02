@@ -1,0 +1,59 @@
+{
+ "elements": [
+  {
+   "type": "relation",
+   "id": 1,
+   "tags": {
+    "boundary": "administrative",
+    "admin_level": "8",
+    "name": "Duque de Caxias",
+    "IBGE:GEOCODIGO": "3301702"
+   }
+  },
+  {
+   "type": "relation",
+   "id": 2,
+   "tags": {
+    "boundary": "administrative",
+    "admin_level": "9",
+    "name": "Xerém"
+   }
+  },
+  {
+   "type": "relation",
+   "id": 3,
+   "tags": {
+    "boundary": "administrative",
+    "admin_level": "9",
+    "name": "Imbariê"
+   }
+  },
+  {
+   "type": "relation",
+   "id": 4,
+   "tags": {
+    "boundary": "administrative",
+    "admin_level": "9",
+    "name": "Duque de Caxias"
+   }
+  },
+  {
+   "type": "relation",
+   "id": 5,
+   "tags": {
+    "boundary": "administrative",
+    "admin_level": "9",
+    "name": "Campos Elíseos"
+   }
+  },
+  {
+   "type": "relation",
+   "id": 6,
+   "tags": {
+    "boundary": "administrative",
+    "admin_level": "10",
+    "name": "Sem geometria"
+   }
+  }
+ ]
+}
