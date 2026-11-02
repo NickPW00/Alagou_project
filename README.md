@@ -22,6 +22,7 @@ Uma iniciativa do projeto Meninas pelo Clima — LabPENSo/UERJ.
 Documentos:
 - [Diagnóstico e arquitetura](docs/00-fase-0-1-diagnostico-e-arquitetura.md)
 - [Fase 2 — estrutura visual e testes](docs/01-fase-2-estrutura-visual.md)
+- [Plano das próximas etapas (aguardando autorização)](docs/02-plano-proximas-etapas.md)
 - [Pendências](docs/pendencias.md)
 - [Publicação da demonstração](docs/publicacao.md)
 
