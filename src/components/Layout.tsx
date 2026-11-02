@@ -98,7 +98,7 @@ function MoreMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   );
 }
 
-/** Menu "Mais" do topo (desktop 1024–1599 px). */
+/** Menu "Mais" do topo (desktop 1024–1799 px). */
 function DesktopMore() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLLIElement>(null);
@@ -117,7 +117,7 @@ function DesktopMore() {
   }, [open]);
   const active = SECONDARY.some((i) => i.to === pathname);
   return (
-    <li ref={ref} className="relative min-[1600px]:hidden">
+    <li ref={ref} className="relative min-[1800px]:hidden">
       <button
         type="button"
         aria-expanded={open}
@@ -195,7 +195,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <DemoBanner />
       <OfflineBanner />
       <header className="bg-navy text-white short:hidden">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 min-[1800px]:max-w-none min-[1800px]:px-6">
           <Link to="/" title="Página inicial" className="shrink-0" data-testid="brand">
             <Brand compact={fullBleed} />
           </Link>
@@ -213,7 +213,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 </li>
               ))}
               {SECONDARY.map(({ to, label }) => (
-                <li key={to} className="hidden min-[1600px]:block">
+                <li key={to} className="hidden min-[1800px]:block">
                   <NavLink
                     to={to}
                     className={({ isActive }) => `rounded-full px-3 py-2 font-medium ${isActive ? 'bg-white text-navy' : 'text-white hover:bg-white/10'}`}

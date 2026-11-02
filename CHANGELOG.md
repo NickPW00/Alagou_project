@@ -4,6 +4,10 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Versões: [SemVe
 
 ## [Não lançado]
 
+## [0.12.1] — 2026-11-02
+### Corrigido
+- Menu completo do topo transbordava a própria caixa a partir de 1600 px (aparecia como rolagem lateral na CI). Agora só aparece a partir de 1800 px, com cabeçalho em largura total; novo teste verifica o encaixe do menu e a matriz ganhou o tamanho 1600×900.
+
 ## [0.12.0] — 2026-11-02
 ### Adicionado
 - A9: link direto para um relato (`/mapa?relato=<id>`), compartilhamento com link e aviso de não oficial, mensagem para relato não encontrado.

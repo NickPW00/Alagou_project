@@ -107,6 +107,12 @@ Alternativas consideradas:
   - "Mais" cortado no celular deitado;
   - seletores duplicados de distrito nos testes antigos.
 
-### 3.4 Pendências
+### 3.4 Correção posterior (0.12.1)
+A CI no GitHub passou a acusar 10 px de rolagem lateral em 1920×1080. A investigação mostrou um **defeito real**: a partir de 1600 px, o menu completo (cerca de 1.400 px de conteúdo) não cabia na caixa de 1.280 px do cabeçalho e transbordava. Com a fonte do ambiente local, o transbordamento ficava dentro da tela e o teste não pegava. Com a fonte mais larga dos servidores da CI, passava da tela.
+- **Correção:** o menu completo só aparece a partir de **1800 px**, com o cabeçalho ocupando toda a largura. Abaixo disso fica o menu "Mais".
+- **Teste novo:** o conteúdo do menu precisa caber na própria caixa, independentemente da fonte. Comprovado: no layout antigo o teste falha (313 px de transbordamento); com a correção, passa.
+- Novo tamanho na matriz: **1600×900**.
+
+### 3.5 Pendências
 - Teste em aparelhos físicos (Fase 7).
 - Zoom de texto em 200%: não entrou na matriz automática nesta versão. Fica para revisão em conjunto com o A6 (conteúdo).

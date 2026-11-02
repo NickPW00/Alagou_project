@@ -18,6 +18,7 @@ const SCREENS: { name: string; width: number; height: number; touch: boolean; mi
   { name: 'tablet-768x1024', width: 768, height: 1024, touch: true, minMapPct: 55 },
   { name: 'notebook-1280x720', width: 1280, height: 720, touch: false, minMapPct: 55 },
   { name: 'notebook-1366x768', width: 1366, height: 768, touch: false, minMapPct: 55 },
+  { name: 'monitor-1600x900', width: 1600, height: 900, touch: false, minMapPct: 55 },
   { name: 'monitor-1920x1080', width: 1920, height: 1080, touch: false, minMapPct: 55 },
 ];
 
@@ -62,6 +63,9 @@ for (const s of SCREENS) {
       await expect(page.getByTestId(short ? 'brand-rail' : 'brand')).toBeVisible();
       const brand = await page.getByTestId('brand').boundingBox();
       if (s.width >= 1024) {
+        // O conteúdo do menu precisa caber na própria caixa (independe da fonte do sistema).
+        const navOverflow = await top.evaluate((n) => n.scrollWidth - n.clientWidth);
+        expect(navOverflow, 'menu do topo transborda a própria caixa').toBeLessThanOrEqual(0);
         for (const el of await top.locator('a, button').all()) {
           if (!(await el.isVisible())) continue;
           const b = await el.boundingBox();
