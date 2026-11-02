@@ -27,7 +27,7 @@ export default defineConfig({
         scope: './',
         display: 'standalone',
         orientation: 'any',
-        theme_color: '#0B2545',
+        theme_color: '#062C58',
         background_color: '#F5F8FB',
         categories: ['utilities', 'weather', 'education'],
         icons: [

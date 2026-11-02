@@ -6,9 +6,9 @@
 @custom-variant short (@media (max-height: 500px) and (orientation: landscape));
 
 @theme {
-  --color-navy: #0b2545;
-  --color-navy-700: #13315c;
-  --color-sky: #13a3e0;
+  --color-navy: #062c58;
+  --color-navy-700: #0d3a6e;
+  --color-sky: #3ca8ec;
   --color-sky-50: #e8f6fd;
   --color-ok: #2e7d32;
   --color-attention: #f2c200;

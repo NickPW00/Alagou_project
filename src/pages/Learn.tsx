@@ -1,6 +1,7 @@
 import { ExternalLink } from 'lucide-react';
 import { Card, PageHeader, SafetyBox, StatusPill } from '../components/ui';
 import { INSTITUTIONAL_LINKS } from '../config/settings';
+import { Logo } from '../components/Institutional';
 
 // Estrutura dos módulos. Os textos completos serão escritos e revisados pela equipe do projeto
 // e cadastrados pelo gerenciador de conteúdo (Fase 6). Não incluímos referências não verificadas.
@@ -61,6 +62,7 @@ export default function Learn() {
           <Card className="h-full">
             <p className="text-xs font-bold uppercase text-[#0E6F99]">Módulo 6</p>
             <h2 className="text-lg font-bold text-navy">Meninas pelo Clima</h2>
+            <Logo name="mpc" className="my-2 h-28" />
             <p className="mt-1 text-sm">
               Projeto de pesquisa e extensão da UERJ, vinculado ao LabPENSo, com estudantes de escolas públicas de Duque de Caxias: educação
               científica, justiça climática, ciência cidadã e protagonismo de meninas e mulheres.

@@ -1,5 +1,6 @@
 import { Map, Megaphone } from 'lucide-react';
 import { InstallButton } from '../components/AppStatus';
+import { InitiativeBadge } from '../components/Institutional';
 import { Link } from 'react-router-dom';
 import { ReportSummary } from '../components/ReportDetail';
 import { Card, EmptyState, ExampleTag, SafetyBox } from '../components/ui';
@@ -24,6 +25,7 @@ export default function Home() {
         <p className="mt-1 text-2xl font-bold text-sky">Alagou? Avisou!</p>
         <p className="mt-1 text-base text-white/90">Monitoramento Comunitário de Alagamentos</p>
         <p className="mt-1 text-sm text-white/80">Duque de Caxias · RJ</p>
+        <InitiativeBadge />
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           <Link to="/mapa" className="flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-white text-lg font-bold text-navy shadow">
             <Map aria-hidden="true" /> Ver mapa ao vivo

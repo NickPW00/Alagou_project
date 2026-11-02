@@ -17,6 +17,6 @@ Autorizado pela coordenação em 02/11/2026. Decisões tomadas:
 | A7 INMET + previsão Open-Meteo | — | planejado |
 | A8 Política de Privacidade e Termos (rascunhos) | — | planejado |
 | A9 Link direto para um relato | — | planejado |
-| E1 Logomarcas institucionais e cores da marca (extra, pedido em 02/11) | [E1-identidade-institucional.md](E1-identidade-institucional.md) | em desenvolvimento |
+| E1 Logomarcas institucionais e cores da marca (extra, pedido em 02/11) | [E1-identidade-institucional.md](E1-identidade-institucional.md) | **implementado e testado** (0.6.0) |
 
 Processo seguido: [processo-desenvolvimento.md](../processo-desenvolvimento.md).

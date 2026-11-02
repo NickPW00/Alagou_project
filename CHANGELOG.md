@@ -4,6 +4,12 @@ Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/). Versões: [SemVe
 
 ## [Não lançado]
 
+## [0.6.0] — 2026-11-02
+### Adicionado
+- E1: logomarcas Meninas pelo Clima, UERJ e UERJ/FEBF no Início, no rodapé, no Sobre ("Realização"), no módulo 6 e no README; créditos de dados e tecnologia; guia de marca.
+### Alterado
+- Cores principais do Alag@u alinhadas à marca Meninas pelo Clima (azul-escuro #062C58, azul-claro #3CA8EC); ícones regenerados.
+
 ## [0.5.0] — 2026-11-02
 ### Adicionado
 - A3: app instalável (PWA) com funcionamento offline, aviso de nova versão, botão "Instalar o app" e faixa de offline.

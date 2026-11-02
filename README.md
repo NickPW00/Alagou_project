@@ -4,6 +4,12 @@
 
 Uma iniciativa do projeto Meninas pelo Clima — LabPENSo/UERJ.
 
+<p>
+  <img src="public/logos/meninas-pelo-clima.webp" height="110" alt="Logomarca do projeto Meninas pelo Clima">
+  &nbsp;&nbsp;
+  <img src="public/logos/uerj-febf.webp" height="70" alt="Logomarcas da UERJ e da FEBF — UERJ-Caxias">
+</p>
+
 ## Status
 
 - Fases 0 e 1 (diagnóstico e arquitetura): aprovadas.
@@ -24,6 +30,7 @@ Documentos:
 - [Fase 2 — estrutura visual e testes](docs/01-fase-2-estrutura-visual.md)
 - [Plano das próximas etapas (aguardando autorização)](docs/02-plano-proximas-etapas.md)
 - [Pendências](docs/pendencias.md)
+- [Guia de marca](docs/marca/README.md)
 - [Publicação da demonstração](docs/publicacao.md)
 
 ## Desenvolvimento

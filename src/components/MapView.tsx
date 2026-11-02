@@ -74,7 +74,7 @@ function trendImage(trend: WaterTrend): ImageData {
   c.width = c.height = s;
   const g = c.getContext('2d')!;
   const m = s / 2;
-  g.fillStyle = '#0B2545';
+  g.fillStyle = '#062C58';
   g.strokeStyle = '#FFFFFF';
   g.lineWidth = 5;
   g.beginPath();
@@ -266,7 +266,7 @@ export default function MapView({
           source: 'reports',
           filter: ['has', 'point_count'],
           layout: { 'text-field': ['get', 'point_count_abbreviated'], 'text-size': 14 },
-          paint: { 'text-color': '#FFFFFF', 'text-halo-color': '#0B2545', 'text-halo-width': 1.5 },
+          paint: { 'text-color': '#FFFFFF', 'text-halo-color': '#062C58', 'text-halo-width': 1.5 },
         });
       }
       map.addLayer({
@@ -374,7 +374,7 @@ export default function MapView({
       return;
     }
     if (!markerRef.current) {
-      markerRef.current = new maplibregl.Marker({ color: '#0B2545', draggable: true })
+      markerRef.current = new maplibregl.Marker({ color: '#062C58', draggable: true })
         .setLngLat([value.lng, value.lat])
         .addTo(map);
       markerRef.current.on('dragend', () => {

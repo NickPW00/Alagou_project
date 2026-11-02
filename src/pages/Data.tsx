@@ -18,7 +18,7 @@ function Bars({ title, rows }: { title: string; rows: { label: string; value: nu
               </th>
               <td className="py-1">
                 <div className="flex items-center gap-2">
-                  <div className="h-4 rounded" style={{ width: `${(r.value / max) * 100}%`, minWidth: r.value ? 4 : 0, background: r.color ?? '#13A3E0' }} />
+                  <div className="h-4 rounded" style={{ width: `${(r.value / max) * 100}%`, minWidth: r.value ? 4 : 0, background: r.color ?? '#3CA8EC' }} />
                   <span className="font-semibold">{r.value}</span>
                 </div>
               </td>

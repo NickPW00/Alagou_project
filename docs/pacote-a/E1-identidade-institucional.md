@@ -39,4 +39,29 @@ Fora do escopo: redesenhar a marca do Alag@u ou alterar as logomarcas institucio
 4. Sem rolagem lateral e sem sobreposição na matriz do A1.
 
 ## 3. Como foi
-*(preenchido ao concluir o item)*
+
+**Status:** implementado e testado (versão 0.6.0).
+
+### 3.1 Entregue
+- Componente `Institutional.tsx` com:
+  - **selo no Início** ("Uma iniciativa do projeto Meninas pelo Clima — LabPENSo/UERJ", com a logomarca);
+  - **créditos no rodapé** (Meninas pelo Clima + UERJ/FEBF);
+  - **seção "Realização"** no Sobre (as três logomarcas, com descrição e link);
+  - logomarca no **módulo 6** do Aprenda e Previna.
+- Nova seção **"Créditos de dados e tecnologia"** no Sobre (OpenStreetMap/ODbL, OpenFreeMap, MapLibre).
+- Logomarcas no **README**.
+- **Cores da marca** aplicadas: azul-escuro `#062C58` e azul-claro `#3CA8EC`. Os ícones do app foram regenerados com as novas cores.
+- **Guia de marca** em [`docs/marca/README.md`](../marca/README.md), com os originais guardados em `docs/marca/originais/`.
+- Prints: [celular](../img/e1-logos-celular.png) · [Sobre no desktop](../img/e1-sobre-desktop.png).
+
+### 3.2 Desvios
+Nenhum. Uma observação: as cores foram **amostradas do JPEG** e precisam ser confirmadas com o manual de marca, se ele existir.
+
+### 3.3 Resultados
+- Pesos: Meninas pelo Clima 23 kB, UERJ 13 kB, UERJ+FEBF 11 kB, todos abaixo de 40 kB (verificado por teste).
+- Novo `e2e/institutional.spec.ts`: logomarcas carregadas e com texto alternativo no Início, no rodapé, no Sobre e no módulo 6.
+- Suíte completa: **83 passaram**, 31 ignorados (por desenho), **0 falhas**. A verificação de contraste (axe) passou com as novas cores em todas as páginas e nos 15 tamanhos de tela.
+
+### 3.4 Pendências
+- Versões vetoriais (SVG) ou com fundo transparente das logomarcas, se a coordenação tiver. Elas permitiriam usar as logomarcas também sobre o azul.
+- Logomarca própria do LabPENSo, se houver.

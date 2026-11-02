@@ -80,7 +80,7 @@ function Choice<T extends string>({
             key={o}
             className={`flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border-2 bg-white px-4 py-2 text-base font-medium has-[:focus-visible]:outline has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-sky ${value === o ? 'border-navy bg-sky-50' : 'border-gray-200'}`}
           >
-            <input type="radio" name={name} value={o} checked={value === o} onChange={() => onChange(o)} className="h-5 w-5 accent-[#0B2545]" />
+            <input type="radio" name={name} value={o} checked={value === o} onChange={() => onChange(o)} className="h-5 w-5 accent-[#062C58]" />
             {render(o)}
           </label>
         ))}
@@ -434,7 +434,7 @@ export default function ReportForm() {
                     type="checkbox"
                     checked={draft.hazards.includes(h)}
                     onChange={(e) => set('hazards', e.target.checked ? [...draft.hazards, h] : draft.hazards.filter((x) => x !== h))}
-                    className="h-5 w-5 accent-[#0B2545]"
+                    className="h-5 w-5 accent-[#062C58]"
                   />
                   {HAZARD_LABELS[h]}
                 </label>

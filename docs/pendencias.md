@@ -1,7 +1,9 @@
 # Lista de pendências
 
 ## Insumos da coordenação
-- [ ] Logomarca oficial do Meninas pelo Clima (SVG/PNG) e cores institucionais
+- [x] Logomarcas Meninas pelo Clima, UERJ e UERJ/FEBF recebidas e aplicadas (E1, 0.6.0)
+- [ ] Versões vetoriais/fundo transparente das logomarcas e confirmação das cores com o manual de marca
+- [ ] Logomarca do LabPENSo, se houver
 - [ ] Decisões 3 a 6 do documento da Fase 1 (login, menores, contas de serviço, parâmetros científicos)
 
 ## Técnicas

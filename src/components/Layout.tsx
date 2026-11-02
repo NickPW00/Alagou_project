@@ -16,6 +16,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { isDemo } from '../data';
 import { OfflineBanner, UpdatePrompt } from './AppStatus';
+import { FooterCredits } from './Institutional';
 import { Disclaimer } from './ui';
 
 export function Brand({ compact = false }: { compact?: boolean }) {
@@ -257,7 +258,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               {children}
               <footer className="mt-10 border-t border-navy/10 pt-4">
                 <Disclaimer />
-                <p className="mt-2 text-xs text-muted">Uma iniciativa do projeto Meninas pelo Clima — LabPENSo/UERJ.</p>
+                <FooterCredits />
               </footer>
             </div>
           )}

@@ -1,4 +1,6 @@
+import { Logo } from '../components/Institutional';
 import { Card, Disclaimer, PageHeader, SafetyBox } from '../components/ui';
+import { INSTITUTIONAL_LINKS } from '../config/settings';
 import { CONDITION_INFO } from '../domain/labels';
 import { FRESHNESS } from '../config/settings';
 import { STREET_CONDITIONS } from '../domain/types';
@@ -15,6 +17,44 @@ export default function About() {
         <div className="mt-3">
           <Disclaimer />
         </div>
+      </Card>
+
+      <Card>
+        <h2 className="font-bold text-navy">Realização</h2>
+        <div className="mt-3 grid items-center gap-6 sm:grid-cols-2">
+          <div className="flex flex-col items-center text-center">
+            <Logo name="mpc" className="h-40" />
+            <p className="mt-2 text-sm">
+              Projeto de pesquisa e extensão <strong>Meninas pelo Clima</strong>, do Laboratório de Pesquisa em Educação, Natureza e Sociedade
+              (LabPENSo).
+            </p>
+            <a href={INSTITUTIONAL_LINKS.project} target="_blank" rel="noopener noreferrer" className="mt-1 text-sm font-semibold text-navy underline">
+              labpenso.org/meninaspeloclima<span className="sr-only"> (abre em nova aba)</span>
+            </a>
+          </div>
+          <div className="flex flex-col items-center gap-4 text-center">
+            <Logo name="uerj" className="h-32" />
+            <Logo name="uerjFebf" className="h-14" />
+            <p className="text-sm">
+              Universidade do Estado do Rio de Janeiro (UERJ) — Faculdade de Educação da Baixada Fluminense (FEBF), UERJ-Caxias.
+            </p>
+          </div>
+        </div>
+      </Card>
+
+      <Card>
+        <h2 className="font-bold text-navy">Créditos de dados e tecnologia</h2>
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
+          <li>
+            Mapa base: dados ©{' '}
+            <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="underline">
+              colaboradores do OpenStreetMap
+            </a>{' '}
+            (licença ODbL), servidos por OpenFreeMap.
+          </li>
+          <li>Visualização do mapa: MapLibre GL JS (código aberto, licença BSD).</li>
+          <li>O código do Alag@u é aberto e está publicado no GitHub.</li>
+        </ul>
       </Card>
 
       <Card>
