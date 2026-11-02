@@ -1,0 +1,134 @@
+{
+ "executado_em": "2026-11-02T23:12:53.275Z",
+ "origem": "GitHub Actions (servidores fora do Brasil)",
+ "resultados": [
+  {
+   "fonte": "INMET",
+   "descricao": "Avisos meteorológicos ativos (API)",
+   "url": "https://apiprevmet3.inmet.gov.br/avisos/ativos",
+   "ok": true,
+   "http": 200,
+   "url_final": "https://apiprevmet3.inmet.gov.br/avisos/ativos",
+   "tipo": "application/json; charset=utf-8",
+   "cors": "https://nickpw00.github.io",
+   "bytes": 425890,
+   "inicio": "{\"hoje\":[{\"id\":56247,\"id_aviso\":28601,\"id_sequencia\":1,\"id_condicao_severa\":23,\"id_icone\":140,\"id_usuario\":110,\"codigo\":\"urn:oid:2.49.0.0.76.0.2026.28601.1\",\"referencia\":null,\"data_inicio\":\"2026-11-02T00:00:00.000Z\",\"hora_inicio\":\"10:00\",\"data_fim\":\"2026-11-02T00:00:00.000Z\",\"hora_fim\":\"21:00\",\"poli",
+   "ms": 1844
+  },
+  {
+   "fonte": "INMET",
+   "descricao": "Avisos meteorológicos (RSS)",
+   "url": "https://apiprevmet3.inmet.gov.br/avisos/rss",
+   "ok": true,
+   "http": 200,
+   "url_final": "https://apiprevmet3.inmet.gov.br/avisos/rss",
+   "tipo": "application/rss+xml",
+   "cors": "https://nickpw00.github.io",
+   "bytes": 145971,
+   "inicio": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?> <rss version=\"2.0\"> <channel> <title>Avisos</title> <link>https://avisos.inmet.gov.br</link> <description>Avisos atuais na América do Sul</description> <!-- About Copyright: Licenca de Uso: O conteudo deste site, podera ser reproduzido desde que citada a fonte",
+   "ms": 1862
+  },
+  {
+   "fonte": "INMET",
+   "descricao": "Previsão por município (API)",
+   "url": "https://apiprevmet3.inmet.gov.br/previsao/3301702",
+   "ok": true,
+   "http": 200,
+   "url_final": "https://apiprevmet3.inmet.gov.br/previsao/3301702",
+   "tipo": "application/json; charset=utf-8",
+   "cors": "https://nickpw00.github.io",
+   "bytes": 269993,
+   "inicio": "{\"3301702\":{\"02/11/2026\":{\"manha\":{\"uf\":\"RJ\",\"entidade\":\"Duque de Caxias\",\"resumo\":\"Muitas nuvens\",\"tempo\":\"\",\"temp_max\":34,\"temp_min\":19,\"dir_vento\":\"SE-S\",\"int_vento\":\"Fracos\",\"cod_icone\":\"34\",\"icone\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABWCAYAAABPaoF5AAAACXBIWXMAAC4jAAAuIwF4pT92AA",
+   "ms": 406
+  },
+  {
+   "fonte": "INMET",
+   "descricao": "Portal de alertas (link da tela de Alertas)",
+   "url": "https://alertas2.inmet.gov.br/",
+   "ok": false,
+   "erro": "TypeError: ECONNRESET",
+   "ms": 925
+  },
+  {
+   "fonte": "INMET",
+   "descricao": "Portal INMET",
+   "url": "https://portal.inmet.gov.br/",
+   "ok": true,
+   "http": 200,
+   "url_final": "https://portal.inmet.gov.br/",
+   "tipo": "text/html; charset=UTF-8",
+   "cors": "https://nickpw00.github.io",
+   "bytes": 76270,
+   "inicio": " <!DOCTYPE html> <html lang=\"pt_BR\"> <head> <!-- Meta --> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <title>Instituto Nacional de Meteorologia - INMET</title> <!-- Fonts --> <link href='https://fonts.googleapis.com/css?f",
+   "ms": 1672
+  },
+  {
+   "fonte": "Cemaden",
+   "descricao": "Mapa interativo (link da tela de Alertas)",
+   "url": "https://mapainterativo.cemaden.gov.br/",
+   "ok": false,
+   "erro": "TypeError: UND_ERR_CONNECT_TIMEOUT",
+   "ms": 10487
+  },
+  {
+   "fonte": "Cemaden",
+   "descricao": "Serviço de dados (PED)",
+   "url": "https://sws.cemaden.gov.br/PED/",
+   "ok": false,
+   "erro": "TypeError: UND_ERR_CONNECT_TIMEOUT",
+   "ms": 10494
+  },
+  {
+   "fonte": "Cemaden",
+   "descricao": "Site institucional (link do Aprenda)",
+   "url": "https://www.gov.br/cemaden/pt-br",
+   "ok": true,
+   "http": 200,
+   "url_final": "https://www.gov.br/cemaden/pt-br",
+   "tipo": "text/html;charset=utf-8",
+   "cors": null,
+   "bytes": 213833,
+   "inicio": "<!DOCTYPE html> <html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"pt-br\" xml:lang=\"pt-br\"> <head> <meta charset=\"utf-8\" /> <!-- Google Tag Manager --> <script type=\"text\">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByT",
+   "ms": 958
+  },
+  {
+   "fonte": "Defesa Civil RJ",
+   "descricao": "Site (link da tela de Alertas)",
+   "url": "https://defesacivil.rj.gov.br/",
+   "ok": true,
+   "http": 200,
+   "url_final": "https://defesacivil.rj.gov.br/",
+   "tipo": "text/html; charset=utf-8",
+   "cors": null,
+   "bytes": 142803,
+   "inicio": " <!doctype html> <html lang=\"en-gb\" dir=\"ltr\"> <head> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\"> <meta charset=\"utf-8\"> <meta name=\"generator\" content=\"Helix Ultimate - The Most Popular Joomla! Template Framework.\"> <title>Defesa Civil RJ </title",
+   "ms": 2260
+  },
+  {
+   "fonte": "Prefeitura de Duque de Caxias",
+   "descricao": "Site (link da tela de Alertas)",
+   "url": "https://duquedecaxias.rj.gov.br/",
+   "ok": true,
+   "http": 200,
+   "url_final": "https://portal.duquedecaxias.rj.gov.br/",
+   "tipo": "text/html; charset=UTF-8",
+   "cors": null,
+   "bytes": 3838,
+   "inicio": "<!DOCTYPE html> <html lang=\"pt-BR\"> <head> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <meta name=\"csrf-token\" content=\"WP7zzXCoCYFVvavSs7jhhIfYzGWlBxKy6PFuxCRl\"> <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-RX",
+   "ms": 1663
+  },
+  {
+   "fonte": "Open-Meteo",
+   "descricao": "Previsão horária de chuva (4 pontos)",
+   "url": "https://api.open-meteo.com/v1/forecast?latitude=-22.786,-22.708,-22.632,-22.574&longitude=-43.311,-43.268,-43.212,-43.302&hourly=precipitation,precipitation_probability&timezone=America%2FSao_Paulo&forecast_days=2",
+   "ok": true,
+   "http": 200,
+   "url_final": "https://api.open-meteo.com/v1/forecast?latitude=-22.786,-22.708,-22.632,-22.574&longitude=-43.311,-43.268,-43.212,-43.302&hourly=precipitation,precipitation_probability&timezone=America%2FSao_Paulo&forecast_days=2",
+   "tipo": "application/json; charset=utf-8",
+   "cors": "*",
+   "bytes": 6571,
+   "inicio": "[{\"latitude\":-22.81195,\"longitude\":-43.3125,\"generationtime_ms\":0.05888938903808594,\"utc_offset_seconds\":-10800,\"timezone\":\"America/Sao_Paulo\",\"timezone_abbreviation\":\"GMT-3\",\"elevation\":13.0,\"hourly_units\":{\"time\":\"iso8601\",\"precipitation\":\"mm\",\"precipitation_probability\":\"%\"},\"hourly\":{\"time\":[\"20",
+   "ms": 245
+  }
+ ]
+}
